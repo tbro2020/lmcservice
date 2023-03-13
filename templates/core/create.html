@@ -2,14 +2,11 @@
 
 {% load i18n %}
 {% load core %}
+{% load static %}
 {% load crispy_forms_tags %}
 
-{% block head %}
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-{% endblock head %}
-
 {% block content %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.js" integrity="sha512-Tsdobfrx6IMRPi8d5z3AtjWNSbZxGm58IZFnblaRaepw562ZITlRhUM2Zu87vbvZjQxGmmto+31zEBLZ4wjs+w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <div style="z-index: -1; position: fixed; color: grey;opacity: 0.1;">
         <h1 style="font-size: 10rem;">{{ model|getattr:'_meta'|getattr:'verbose_name' }}</h1>
@@ -23,14 +20,14 @@
             </div>
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
-                <button class="btn btn-sm btn-outline-success" type="submit" form="main-form">{% trans 'Save' %}</button>
+                <button class="btn btn-sm btn-outline-success" type="submit" form="form-container">{% trans 'Save' %}</button>
               </div>
             </div>
         </div>
     </div>
 
     <div class="mb-5">
-        <form method="post" id="main-form">
+        <form method="post" id="form-container">
                 {% csrf_token %}
 
                 {{ form.non_form_errors }}
@@ -56,7 +53,7 @@
 
                     <div id="formsets">
                         {% for form in inlineformset %}
-                            <div id="form-template">
+                            <div class="formset_row">
                                 <h2>#{{ forloop.counter }}</h2>
                                 <div class="d-flex py-1 inline {{ inlineformset.prefix }}">
                                     <div class="form-row">
@@ -73,5 +70,9 @@
                 {% endif %}
         </form>
     </div>
+
+    <script type="text/javascript">
+        $('.formset_row').formset({addText: "Add", deleteText: 'remove', prefix: '{{ inlineformset.prefix }}'});
+    </script>
 
 {% endblock content %}

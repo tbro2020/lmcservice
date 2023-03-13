@@ -18,6 +18,8 @@ class User(AbstractUser):
 
     objects = UserManager()
 
+    list_display_fields = ("id", "first_name", "last_name", "email", "company", "office", "is_active")
+
     form_fields = ("last_name", "first_name", "email", "is_active", "is_staff")
 
     extra = {
@@ -41,8 +43,6 @@ class User(AbstractUser):
            "name": "groups"
         })
     }
-
-    list_display_fields = ("id", "first_name", "last_name", "email", "company", "office", "is_active")
 
     change_actions = ({
         "verbose_name": "Reset password",

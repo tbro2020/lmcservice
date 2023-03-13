@@ -4,10 +4,11 @@
 {% load core %}
 {% load crispy_forms_tags %}
 
-{% block head %}
-{% endblock head %}
 
 {% block content %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.formset/1.2.2/jquery.formset.js" integrity="sha512-Tsdobfrx6IMRPi8d5z3AtjWNSbZxGm58IZFnblaRaepw562ZITlRhUM2Zu87vbvZjQxGmmto+31zEBLZ4wjs+w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
     <div style="z-index: -1; position: fixed; color: grey;opacity: 0.1;">
         <h1 style="font-size: 10rem;">{{ model|getattr:'_meta'|getattr:'verbose_name' }}</h1>
     </div>
@@ -34,7 +35,7 @@
                       {% endif %}
                   {% endfor %}
 
-                <button class="btn btn-sm btn-outline-success" type="submit" form="main-form">{% trans 'Save' %}</button>
+                <button class="btn btn-sm btn-outline-success" type="submit" form="form-container">{% trans 'Save' %}</button>
               </div>
 
                 {% for action in model.change_actions %}
@@ -54,7 +55,7 @@
     </div>
 
     <div class="mb-5">
-        <form method="post" id="main-form">
+        <form method="post" id="form-container">
             {% csrf_token %}
 
             {{ form.non_form_errors }}
@@ -80,19 +81,27 @@
                 {{ inlineformset.management_form }}
 
                 {% for form in inlineformset %}
-                    <h2>#{{ form.instance.id }}</h2>
-                    <div class="d-flex py-1 inline {{ inlineformset.prefix }}">
-                        <div class="form-row">
-                            {% for field in form %}
-                                <div {% if field.field.widget.input_type != 'hidden' %}class="col-md-3"{% endif %}>
-                                    {{ field|as_crispy_field }}
-                                </div>
-                            {% endfor %}
+                    <div class="formset_row">
+                        {% if form.instance %}
+                            <h2>#{{ form.instance.id }}</h2>
+                        {% endif %}
+                        <div class="d-flex py-1 inline {{ inlineformset.prefix }}">
+                            <div class="form-row">
+                                {% for field in form %}
+                                    <div {% if field.field.widget.input_type != 'hidden' %}class="col-md-3"{% endif %}>
+                                        {{ field|as_crispy_field }}
+                                    </div>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
-                    <hr>
                 {% endfor %}
             {% endif %}
         </form>
     </div>
+
+    <script type="text/javascript">
+        $('.formset_row').formset({addText: "Add", deleteText: 'remove', prefix: '{{ inlineformset.prefix }}'});
+    </script>
+
 {% endblock content %}
