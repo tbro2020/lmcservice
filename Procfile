@@ -1,1 +1,1 @@
-web: gunicorn --bind 0.0.0.0:$PORT lmcservice.wsgi --preload --max-requests 1200
+web: gunicorn --bind 0.0.0.0:$PORT lmcservice.wsgi
