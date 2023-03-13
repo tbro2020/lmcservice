@@ -1,0 +1,235 @@
+{% load i18n %}
+{% load cache %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% load core %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon"href="{% static 'favicon.ico' %}">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Lignes Martimes Congolaises{% endblock title %}</title>
+
+    <meta name="description" content="{% block description %}LMC Services{% endblock description %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    {% comment %}
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    {% endcomment %}
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.10.0/jsoneditor.css" integrity="sha512-/JghmMAi5bleEgj1BT7h7Jm2+o4I4AbJYRVaY3eGGfdyTzV+yW3n0IedWH4ysbws5zpNK1beCqVJh0MSZxvNaA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.10.0/jsoneditor.js" integrity="sha512-6IR2k2uL9AnAl2jxtTjGVDbqJ231btVidKH2ZOwU3L6lLPAlm88Zcm5/8unssV6nQwB25RcvA3k3JWYdwMumkQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <style>
+        body {
+          font-size: .775rem;
+        }
+
+        input, select, textarea{
+            font-size: .775rem !important;
+        }
+
+        .form-text{
+            margin-top: 0px !important;
+        }
+
+        .feather {
+          width: 16px;
+          height: 16px;
+          vertical-align: text-bottom;
+        }
+
+        /*
+         * Sidebar
+         */
+
+        .sidebar {
+          position: fixed;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          z-index: 100; /* Behind the navbar */
+          padding: 0;
+          box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+        }
+
+        .sidebar-sticky {
+          position: -webkit-sticky;
+          position: sticky;
+          height: calc(100vh - 48px);
+          padding-top: .5rem;
+          overflow-x: hidden;
+          overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+        }
+
+        .sidebar .nav-link {
+          font-weight: 500;
+          color: #333;
+        }
+
+        .sidebar .nav-link .feather {
+          margin-right: 4px;
+          color: #999;
+        }
+
+        .sidebar .nav-link.active {
+          color: #007bff;
+        }
+
+        .sidebar .nav-link:hover .feather,
+        .sidebar .nav-link.active .feather {
+          color: inherit;
+        }
+
+        .sidebar-heading {
+          font-size: .75rem;
+          text-transform: uppercase;
+        }
+
+        /*
+         * Navbar
+         */
+
+        .navbar-brand {
+          padding-top: .75rem;
+          padding-bottom: .75rem;
+          font-size: 1rem;
+          background-color: rgba(0, 0, 0, .25);
+          box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
+        }
+
+        .navbar .form-control {
+          padding: .75rem 1rem;
+          border-width: 0;
+          border-radius: 0;
+        }
+
+        .form-control-dark {
+          color: #fff;
+          background-color: rgba(255, 255, 255, .1);
+          border-color: rgba(255, 255, 255, .1);
+        }
+
+        .form-control-dark:focus {
+          border-color: transparent;
+          box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
+        }
+
+        /*
+         * Utilities
+         */
+
+        .border-top { border-top: 1px solid #e5e5e5; }
+        .border-bottom { border-bottom: 1px solid #e5e5e5; }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+      <div class="row">
+
+        {% comment %}
+        {% cache 300 sidebar request.user.username %}
+        {% endcache %}
+        {% endcomment %}
+
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          <div class="sidebar-sticky">
+
+            <div class="col text-center mt-1 mb-1">
+                <img src="{% static "image/logo.png" %}" class="img-fluid" />
+            </div>
+
+            {% if request.user.company %}
+                <h3 class="text-center">{{ request.user.company.name }}</h3>
+                {% else %}
+                <h3 class="text-center">
+                    Lignes Maritimes Congolaises
+                    {% if requser.user.office %}
+                        {{ request.user.office.name }}
+                    {% endif %}
+                </h3>
+            {% endif %}
+
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'core:home' %}">
+                  {% trans 'Home' %} <span class="sr-only">(current)</span>
+                    {% if request.user.company %}
+                        <span class="badge badge-primary">[{{ request.user.company.solde }}]</span>
+                    {% endif %}
+                </a>
+              </li>
+
+                {% comment %}
+                <li class="nav-item">
+                    <a class="nav-link text-capitalize {% if request.resolver_match.kwargs.model == model.1 %}active{% endif %}" href="{% url 'core:list' model.0 model.1 %}">
+                      {{ key}} <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                {% endcomment %}
+
+              {% with request.user|models as apps %}
+                  {% for key, models in apps.items %}
+                      <li class="nav-item">
+                        <a class="nav-link text-capitalize text-muted" href="#">
+                          {{ key }} <span class="sr-only">(current)</span>
+                        </a>
+                        <ul>
+                            {% for model in models %}
+                                <li class="text-capitalize">
+                                    <a class="nav-link text-capitalize {% if request.resolver_match.kwargs.model == model.name %}active{% endif %}" href="{% url 'core:list' key model.name 1 %}">
+                                      {{ model.verbose}} <span class="sr-only">(current)</span>
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                      </li>
+                  {% endfor %}
+              {% endwith %}
+                <a class="nav-link text-capitalize text-muted" href="{% url 'logout' %}">
+                    {% trans 'logout' %}<span class="sr-only">(current)</span>
+                </a>
+            </ul>
+          </div>
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            {% if messages %}
+            <div class="alert alert-success">
+                <ul class="messages mb-0 text-uppercase">
+                    {% for message in messages %}
+                        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+            {% block content %}
+            {% endblock content %}
+        </main>
+
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+    <script>feather.replace()</script>
+
+    <script>
+        $(document).ready(function() {
+            $("input, select").addClass("form-control-sm");
+            $('select').select2();
+        });
+    </script>
+
+</body>
+</html>

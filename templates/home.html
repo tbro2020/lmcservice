@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% load core %}
+{% load i18n %}
+
+{% block content %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+    <div>
+        <h3 class="mb-0">{% trans 'Home' %}</h3>
+        <small>Lignes Maritimes Congolaises</small>
+    </div>
+
+    <div class="row mt-3">
+        {% for state in status %}
+            <div class="card col bg-{{ state.status|displaystatus }} text-white m-1">
+                <div class="card-body">
+                    <h5>{{ state.status }}</h5>
+                    <small>{{ state.status__count }}</small>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-md-8">
+            <h4>Period performance by operation</h4>
+            <canvas id="line-chart"></canvas>
+        </div>
+        <div class="col">
+            <canvas id="pie-chart"></canvas>
+            <small class="text-center text-muted mt-2">Global operation overview</small>
+        </div>
+    </div>
+
+
+
+    <script>
+    const charts = {
+        pie: {
+          type: 'pie',
+          data: {
+            datasets: [{
+              label: "Population",
+              data: {{ data.pie.data|safe }},
+              backgroundColor: ["#6c757d", "#28a745", "#A9A9A9", "#C0C0C0", "#D3D3D3"]
+            }],
+            labels: {{ data.pie.labels|safe }}
+          },
+          options: {
+            responsive: true
+          }
+        },
+        line: {
+          type: 'bar',
+          data: {
+            labels: {{ data.bar.labels|safe }},
+            datasets: [{% for key, value in data.bar.data.items %}
+                {
+                    data: {{ value|safe }},
+                    label: "{{ key }}"
+                },
+            {% endfor %}]
+          },
+        }
+    };
+
+    window.onload = function() {
+      window.myPie = new Chart(document.getElementById('pie-chart').getContext('2d'), charts.pie);
+      window.myLine = new Chart(document.getElementById('line-chart').getContext('2d'), charts.line);
+    };
+    </script>
+
+{% endblock %}

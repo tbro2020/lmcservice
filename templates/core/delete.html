@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load core %}
+
+{% block content %}
+    <div>
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <div>
+                <h1 class="h2">{% trans 'Delete' %} {{ model|getattr:'_meta'|getattr:'verbose_name' }}</h1>
+                <small>
+                    <a href="{% url 'core:list' app model|getattr:'_meta'|getattr:'model_name' 1 %}" class="text-capitalize">{{ model|getattr:'_meta'|getattr:'verbose_name_plural' }}</a>
+                    / <a href="{% url 'core:edit' model|getattr:'_meta'|getattr:'app_label' model|getattr:'_meta'|getattr:'model_name' obj.id %}">Obj#{{ obj.id }}</a> /
+                    {% trans 'Delete' %}
+                </small>
+            </div>
+
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group mr-2">
+                <a class="btn btn-sm btn-outline-danger" href="{% url 'core:edit' model|getattr:'_meta'|getattr:'app_label' model|getattr:'_meta'|getattr:'model_name' obj.id %}">{% trans 'Cancel' %}</a>
+                <button class="btn btn-sm btn-outline-success" type="submit" form="main-form">{% trans 'Accept' %}</button>
+              </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" id="main-form">
+            {% csrf_token %}
+            {{ form }}
+        </form>
+
+    <div>
+        <h4>Are you sure of your action ?</h4>
+        <dl class="row">
+            {% for field in model|getattr:"_meta"|getattr:"fields" %}
+                {% with obj|getattr:field.name as value %}
+                    {% if value %}
+                        <dt class="col-sm-3 text-capitalized">{{ field.verbose_name }}</dt>
+                        <dd class="col-sm-9">{{ value }}</dd>
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+        </dl>
+    </div>
+
+{% endblock content %}

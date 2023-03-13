@@ -1,0 +1,214 @@
+{% load i18n %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATM URN {{ obj.operation_type }}#{% now "m" %}/{% now 'y' %}/{{ obj.id }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <style>
+        .container-fluid{
+            width: 100%;
+        }
+        .img-fluid, .img-thumbnail{
+            width: 128px;
+        }
+        .small-text{
+            font-size: 0.75rem;
+        }
+        .card{
+            border-radius: 0%;
+        }
+        dt{
+            font-size: 0.75rem;
+        }
+        dd{
+            font-size: 0.70rem;
+        }
+        {% if obj.status == "COMPLETED" %}
+        .bg {
+            background-image: url("https://upload.wikimedia.org/wikipedia/commons/0/0c/Armoiries_de_la_R%C3%A9publique_d%C3%A9mocratique_du_Congo_-_2006.png");
+            background-position: center;
+            background-repeat: repeat-y;
+            position: fixed;
+            top: 5%;
+            bottom: 5%;
+            width: 100%;
+            height: 100%;
+            opacity: .025;
+            z-index: -1;
+        }
+        {% endif %}
+
+        {% if obj.status != "COMPLETED" %}
+        .draft {
+            color: orange;
+            font-size: 20rem;
+            font-weight: bolder;
+            writing-mode: vertical-rl;
+            text-orientation: sideways-right;
+
+            z-index: -1;
+            position: fixed;
+            opacity: .75;
+        }
+        {% endif %}
+
+        @media print {
+            .pagebreak {
+                clear: both;
+                page-break-after: always;
+                background-color: transparent;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% if obj.status == "COMPLETED" %}
+        <div class="d-print-block"></div>
+    {% endif %}
+
+    {% if obj.operation_type == "Exportation" %}
+        {% for product in qs %}
+            <div class="container-fluid pagebreak d-print-block">
+            <div class="bg"></div>
+            <div class="row" style="padding: 2.5%;">
+                <div class="col">
+                    <div class="row float-start">
+                        <div class="col text-end"><img class="img-fluid" src="{% static "image/logo.png" %}" alt="lmc-logo"></div>
+                        <div class="col small-text">
+                            <h5>LMC</h5>
+                            <small>Ligne Maritime Congolaise</small><br>
+                            <small>13 Avenue des Aviateurs, Commune de la Gombe, Kinshasa</small>
+                            <p>B.P. 8038 - KINSHASA - RDC</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="row float-end">
+                        <div class="col text-end">
+                            <h5>ATM</h5>
+                            <dl class="row small-text">
+                                <dt class="col-sm-4 d-block">N°</dt>
+                                <dd class="col-sm-8" style="font-size: 14px;">
+                                    {% if obj.status == "COMPLETED" %}
+                                        {% now "Y" %}-
+                                            {% if obj.operation_type == "Importation" %}
+                                                IMP
+                                            {% elif obj.operation_type == "Exportation" %}
+                                                EXP
+                                            {% endif %}
+                                        {% now "m" %}
+                                        {{ obj.id }}
+                                    {% else %}
+                                        <span class="text-warning">#000000</span>
+                                    {% endif %}
+                                </dd>
+
+                                <dt class="col-sm-4 d-block">Ref. Lot</dt>
+                                <dd class="col-sm-8">{{ product.ref }}</dd>
+
+                                <dt class="col-sm-4 d-block">Truck N°</dt>
+                                <dd class="col-sm-8">{{ product.truck }}</dd>
+                            </dl>
+                        </div>
+                        <div class="col"><img class="img-fluid" src="{% static "image/drc.svg" %}" alt="drc-flag"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col" style="margin-top: 1%;">
+                <dl class="row small-text bg-dark text-light text-uppercase" style="padding: 1.5%;">
+                    <dt class="col-sm-3 text-end" style="margin-top: 0.5%;">
+                        EXPORTATEUR : <br>
+                        <small>Importateur</small>
+                    </dt>
+                    <dd class="col-sm-9" style="margin-top: 0.5%;">
+                        <b>{{ obj.company.name }}</b>
+                        /{{ obj.importer_expoter }}
+                        <br>
+                        {{ obj.company.address|title }}, {{ obj.company.city|title }}, {{ obj.company.country|title }}
+                        <br> TEL : {{ obj.company.phone_number }}
+                        <br> EMAIL: {{ obj.company.email }}
+                    </dd>
+                </dl>
+            </div>
+            <div class="col" style="margin-top: 1%;padding: 1.5%">
+                <div class="row">
+                    <div class="col text-end">
+                        <dl class="row small-text text-uppercase">
+                            <dt class="col-sm-5 d-block">MANIFEST/BP N° : </dt>
+                            <dd class="col-sm-7">{{ obj.manifest_bp_no|default:"000000" }}</dd>
+
+                            <dt class="col-sm-5 d-block">BORDER CROSSING :</dt>
+                            <dd class="col-sm-7">{{ obj.exit_point.name }}</dd>
+
+                            <dt class="col-sm-5 d-block">LOADING PORT :</dt>
+                            <dd class="col-sm-7">{{ obj.load_point.name }}</dd>
+                            {% comment %}
+                            <dt class="col-sm-5 d-block">VESSEL NAME :</dt>
+                            <dd class="col-sm-7">{{ obj.ship_name }}</dd>
+
+                            <dt class="col-sm-5 d-block">COUNTRY ORIGIN :</dt>
+                            <dd class="col-sm-7">{{ obj.entry_exit_point.name }}</dd>
+                            {% endcomment %}
+                        </dl>
+                    </div>
+                    <div class="col text-end">
+                        <dl class="row small-text text-uppercase">
+                            <dt class="col-sm-5 d-block">ORIGIN POINT :</dt>
+                            <dd class="col-sm-7">{{ obj.entry_point.name }}</dd>
+
+                            <dt class="col-sm-5 d-block">DESTINATION :</dt>
+                            <dd class="col-sm-7">{{ product.destination }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="col" style="margin-top: 1%;">
+                <dl class="row bg-dark text-light" style="padding: 1.5%;">
+                    <dt class="col-sm-3 text-end">
+                        TYPE/MODE OF TRANSPORT <br>
+                        <small class="text-muted small-text">Type de transport</small>
+                    </dt>
+                    <dd class="col-sm-9">Maritime (CONTAINER/CONTENEUR)</dd>
+                </dl>
+            </div>
+            <div class="col" style="margin-top: 1%;padding: 1.5%;border-top: 2px solid black;">
+                <div class="row">
+                    <div class="col">
+                        <b class="text-uppercase" style="margin-bottom: 0px;padding-bottom: 0px;font-size: 0.70rem;">Declared values provided by Shipping Line. ATM to be submitted together with Cargo Manifest at Discharge or Transit Port.</b>
+                        <small class="text-muted text-uppercase" style="font-size: 12px;margin-top: 0px;padding-top: 0px; font-size: 0.60rem;">Valeurs déclarées fournies par la compagnie maritime. ATM à soumettre avec le manifeste de la cargaison au port de déchargement ou de transit.</small>
+                        <br>
+
+                        {% if obj.status == "COMPLETED" %}
+                        <div class="col float-end">
+                            <img class="img-thumbnail" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={'next':'atm','operation':{{ obj.id }},'product':{{ product.id }}}" alt="debit-note-lmc-qr-code">
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col">
+                        <div class="card bg-dark text-white" style="padding: 1.5%;">
+                            <b class="fs-6">VALIDATED BY : <small class="text-muted"> validee par</small></b>
+                            {% if obj.status == "COMPLETED" %}
+                                <b class="text-uppercase fs-6">{{ obj.updated_by.custom_office.supervisor|default:"LMC" }}</b>
+                            {% else %}
+                                <b class="text-uppercase fs-6">{{ obj.updated_by.full_name }}</b>
+                            {% endif %}
+
+                            <b class="fs-10"><small>STATUS</small> : {{ obj.status }}</b>
+                            <b class="fs-10"><small>Validated on</small> : {{ obj.updated.date }}</b>
+                            <hr>
+                            <small class="fs-10">Printed on {% now "SHORT_DATETIME_FORMAT" %}</small>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+</body>
+</html>

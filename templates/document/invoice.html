@@ -1,0 +1,243 @@
+{% load i18n %}
+{% load static %}
+
+{% load core %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice #{{ obj.id }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <style>
+        .container-fluid{
+            width: 100%;
+        }
+        .img-fluid, .img-thumbnail{
+            width: 64px;
+        }
+        .small-text{
+            font-size: 0.75rem;
+        }
+        .card{
+            border-radius: 0%;
+        }
+        dt{
+            font-size: 12px;
+            font-weight: 600;
+        }
+        dd{
+            margin-bottom: 0px;
+        }
+        td{
+            font-size: 12px;
+        }
+        {% if obj.status == "COMPLETED" %}
+        .bg {
+            background-image: url("https://upload.wikimedia.org/wikipedia/commons/0/0c/Armoiries_de_la_R%C3%A9publique_d%C3%A9mocratique_du_Congo_-_2006.png");
+            background-position: center;
+            background-repeat: round;
+            position: absolute;
+            top: 2.5%;
+            bottom: 2.5%;
+            width: 100%; 
+            height: 100%;  
+            opacity: .1; 
+            z-index: -1;
+        }
+        {% endif %}
+    </style>
+</head>
+<body>
+    {% if obj.status == "COMPLETED" %}
+        <div class="bg d-print-block"></div>
+    {% endif %}
+
+    {% comment %}
+    # if transport is BOAT only single generation 
+    # if Truck generate according to the number of product all with the same ATM with different end specification
+    {% endcomment %}
+
+    <div class="container-fluid">
+        <div class="row" style="padding: 2%;padding-bottom: 0px;">
+            <div class="col">
+                <div class="row float-start">
+                    <div class="col text-start">
+                        <h2>INVOICE</h2>
+                        <p class="small-text">
+                            <b>{{ obj.updated_by.office.billing_info|default:"Ligne Maritime Congolaise" }}</b> <br>
+                            {{ obj.updated_by.office.billing_info.address|default:"13 Avenue des Aviateurs, Commune de la Gombe" }} <br>
+                            {{ obj.updated_by.office.billing_info.postal_code|default:"B.P. 8038" }} <br>
+                            {{ obj.updated_by.office.billing_info.city|default:"Kinshasa" }} <br>
+                            {{ obj.updated_by.office.billing_info.country.name|default:"Democratic Republic of Congo" }} <br>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="row float-end text-end">
+                    <div class="col small-text">
+                        <h5>LMC</h5>
+                        <small>13 Avenue des Aviateurs, Commune de la Gombe, Kinshasa RDC B.P. 8038</small>
+                        <p>RCCM: CD/RCCM/14-B-3622 <br>
+                        ID. NAT: 01-715-A06030E <br>
+                        N°IMPOT : A0700620H</p>
+                        <h5>Invoice N°{{ obj.id }}</h5>
+                    </div>
+                    <div class="col-4 text-end"><img style="width: 128px;" class="img-fluid" src="{% static "image/logo.png" %}" alt="lmc-logo"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <dl class="row small-text bg-dark text-light text-uppercase" style="padding: 0.5%;margin-bottom: 0px;">
+                {% if obj.operation_type == "Importation" %}
+                <dt class="col-sm-3 text-end" style="margin-top: 0.25%;">
+                    SHIPPING LINE : <br>
+                    <small class="fst-italic" style="font-size: 9px;">Armateur</small>
+                </dt>
+                <dd class="col-sm-9" style="margin-top: 0.25%;">
+                    {{ obj.company.name }}
+                    <br>
+                    {{ obj.company.address|title }}, {{ obj.company.city|title }}, {{ obj.company.country|title }}
+                    <br> TEL : +243990580000
+                    <br> EMAIL: contact@lmc.cd
+                </dd>
+                {% endif %}
+
+                {% if obj.operation_type == "Exportation" %}
+                <dt class="col-sm-3 text-end" style="margin-top: 0.25%;">
+                    EXPORTATEUR : <br>
+                    <small>Importateur</small>
+                </dt>
+                <dd class="col-sm-9" style="margin-top: 0.25%;">
+                    EAJ INTERNATIONAL DRC SARL
+                    <br>
+                    4 5E RUE INDUSTRIEL DANS LA COMMUNE DE LIMETE, KINSHASA, DRC; TEL : +243990580000 ;
+                    EMAIL: contact@lmc.cd
+                </dd>
+                {% endif %}
+            </dl>
+        </div>
+        <div class="col" style="margin-top: 1%;padding: 1.5%">
+                <div class="row">
+                    <div class="col text-end">
+                        <dl class="row small-text text-uppercase">
+                            <dt class="col-sm-5 d-block">MANIFEST/BP N° : </dt>
+                            <dd class="col-sm-7">{{ obj.manifest_bp_no|default:"000000" }}</dd>
+
+                            <dt class="col-sm-5 d-block">BORDER CROSSING :</dt>
+                            <dd class="col-sm-7">{{ obj.exit_point.name }}</dd>
+
+                            <dt class="col-sm-5 d-block">LOADING PORT :</dt>
+                            <dd class="col-sm-7">{{ obj.load_point.name }}</dd>
+                            {% comment %}
+                            <dt class="col-sm-5 d-block">VESSEL NAME :</dt>
+                            <dd class="col-sm-7">{{ obj.ship_name }}</dd>
+
+                            <dt class="col-sm-5 d-block">COUNTRY ORIGIN :</dt>
+                            <dd class="col-sm-7">{{ obj.entry_exit_point.name }}</dd>
+                            {% endcomment %}
+                        </dl>
+                    </div>
+                    <div class="col text-end">
+                        <dl class="row small-text text-uppercase">
+                            <dt class="col-sm-5 d-block">ORIGIN POINT :</dt>
+                            <dd class="col-sm-7">{{ obj.entry_point.name }}</dd>
+
+                            <dt class="col-sm-5 d-block">DESTINATION :</dt>
+                            <dd class="col-sm-7">{{ product.destination }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        <div class="col">
+            <dl class="row bg-dark text-light" style="padding: 1.5%;">
+                <dt class="col-sm-3 text-end">
+                    TYPE/MODE OF TRANSPORT <br>
+                    <small class="text-muted small-text">Type de transport</small>
+                </dt>
+                <dd class="col-sm-9">Maritime (CONTAINER/CONTENEUR)</dd>
+            </dl>
+        </div>
+        <div class="col">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>{% translate "Unit Type" %}</th>
+                        <th>{% translate "Unit Rate" %}</th>
+                        <th>{% translate "Quantity/Weight" %}</th>
+                        <th>{% translate "Penalty" %}(%)</th>
+                        <th>{% translate "Total (USD)" %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in qs %}
+                    <tr>
+                        <td>{{ product.product_type.name }}</td>
+                        <td>{{ product.product_type.fees }}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.penalty|default:"-" }}</td>
+                        {% with product.product_type.fees.amount|multiply:product.quantity as sum  %}
+                            {% with product.penalty|divide:100 as penality %}
+                                {% with sum|multiply:penality as penality %}
+                                    <td>{{ obj.cost_currency }} {{ sum|add:penality }}</td>
+                                {% endwith %}
+                            {% endwith %}
+                        {% endwith %}
+                    </tr>
+                    {% endfor %}
+
+
+
+                    <tr>
+                        <td colspan="4"><b>Total Amount : </b></td>
+                        <td style="font-weight: bolder;">{{ obj.cost|default:"-" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col" style="border-top: 2px solid black;">
+            <div class="row">
+                <div class="col">
+                    <b class="text-uppercase" style="margin-bottom: 0px;padding-bottom: 0px;font-size: 11px;">Declared values provided by Shipping Line. ATM to be submitted together with Cargo Manifest at Discharge or Transit Port.</b>
+                    <small class="text-muted text-uppercase" style="font-size: 9px;margin-top: 0px;padding-top: 0px;">Valeurs déclarées fournies par la compagnie maritime. ATM à soumettre avec le manifeste de la cargaison au port de déchargement ou de transit.</small>
+                    <br>
+
+                    {% if obj.status == "COMPLETED" %}
+                    <div class="col text-start">
+                        <img class="img-thumbnail" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={next:'invoice','operation':{{ obj.id }}}" alt="debit-note-lmc-qr-code">
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="col">
+                    <div class="card bg-dark text-white" style="padding: 1.5%;">
+                        <h5>BANK ACCOUNT DETAILS</h5>
+                        <dl class="row" style="margin-bottom: 0px;">
+                            <dt class="col-sm-3">Account Name</dt>
+                            <dd class="col-sm-9 text-uppercase">{{ obj.updated_by.office.billing_info|default:"Ligne Maritime Congolaise" }}</dd>
+
+                            <dt class="col-sm-3">Bank</dt>
+                            <dd class="col-sm-9">{{ obj.updated_by.office.billing_info.bank_name|default:"Bank Name" }}</dd>
+                            
+                            <dt class="col-sm-3">Branch Name</dt>
+                            <dd class="col-sm-9">{{ obj.updated_by.office.billing_info.branch_name|default:"Branch Name" }}</dd>
+                            
+                            <dt class="col-sm-3 text-truncate">Branch No</dt>
+                            <dd class="col-sm-9">{{ obj.updated_by.office.billing_info.branch_no|default:"Branch No" }}</dd>
+
+                            <dt class="col-sm-3">Account Number</dt>
+                            <dd class="col-sm-9">{{ obj.updated_by.office.billing_info.account_no|default:"Account No" }}</dd>
+                            
+                            <dt class="col-sm-3">Swift Code</dt>
+                            <dd class="col-sm-9">{{ obj.updated_by.office.billing_info.swift_code|default:"Swift Code" }}</dd>
+                        </dl>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

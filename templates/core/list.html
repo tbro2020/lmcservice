@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load core %}
+
+{% block head %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.10.0/jsoneditor.js" integrity="sha512-6IR2k2uL9AnAl2jxtTjGVDbqJ231btVidKH2ZOwU3L6lLPAlm88Zcm5/8unssV6nQwB25RcvA3k3JWYdwMumkQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock head %}
+
+{% block content %}
+    <div>
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <h1 class="h2 text-capitalize">{{ model|getattr:'_meta'|getattr:'verbose_name' }}</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group mr-2">
+                    {% if "service.view_operation" in perms %}
+                        <a href="{% url 'core:create' app model|getattr:'_meta'|getattr:'model_name' %}" class="btn btn-sm btn-outline-secondary">
+                            {% trans 'Add' %}
+                        </a>
+                    {% endif %}
+                  {% for action in model.list_actions %}
+                      <a href="{{ action.url }}?{{ request.GET.urlencode }}" class="btn btn-sm btn-outline-primary">{% trans action.verbose_name %}</a>
+                  {% endfor %}
+              </div>
+            </div>
+        </div>
+
+        <div>
+            <form method="get">
+                <div class="input-group mb-3">
+                  <input type="search" name="q" class="form-control" placeholder="{% trans 'Search' %}" aria-label="Search" aria-describedby="basic-addon2">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary btn-sm" type="submit">{% trans 'Search' %}</button>
+                  </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-sm">
+              <thead>
+                <tr>
+                    {% for field in fields %}
+                        <th class="text-capitalize">{{ field.verbose_name }}</th>
+                    {% endfor %}
+                    <th>{% trans 'Actions' %}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for obj in qs %}
+                    <tr>
+                        {% for field in fields %}
+                        <td>
+                            {% if field.name == "status" %}
+                                <span class="badge badge-{{ obj|getdict:field.name|displaystatus }}">{{ obj|getdict:field.name|default:"-" }}</span>
+                                {% else %}
+                                {{ obj|getdict:field.name|default:"-" }}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                        <td><a href="{% url 'core:edit' model|getattr:'_meta'|getattr:'app_label' model|getattr:'_meta'|getattr:'model_name' obj|getdict:'id' %}">
+                            {% trans 'Edit | View' %}
+                        </a></td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td class="text-center text-uppercase" colspan="10">
+                            <h5>No {{ model|getattr:'_meta'|getattr:'verbose_name' }} found</h5>
+                        </td>
+                    </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+
+        # Apply pagination
+
+    </div>
+{% endblock content %}
