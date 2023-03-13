@@ -89,7 +89,6 @@ WSGI_APPLICATION = 'lmcservice.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-print(DEBUG)
 if DEBUG:
     DATABASES = {
         'default': {
@@ -150,7 +149,7 @@ LOGOUT_REDIRECT_URL = "login"
 LOGIN_REDIRECT_URL = "core:home"
 
 # DEBUG TOOLBAR
-if DEBUG:
+if not DEBUG:
     import socket  # only if you haven't already imported this
 
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())

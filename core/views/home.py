@@ -23,7 +23,6 @@ class Home(View):
             data["pie"]["data"].append(pie.get("status__count"))
 
         bars = qs.values("status", "created__month").annotate(Count("status"))
-        print(bars)
 
         for bar in bars:
             data["bar"]["labels"].append(bar.get("created__month"))
