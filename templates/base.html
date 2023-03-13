@@ -169,6 +169,9 @@
                         <span class="badge badge-primary">[{{ request.user.company.solde }}]</span>
                     {% endif %}
                 </a>
+                <a class="nav-link text-capitalize text-muted" href="{% url 'logout' %}">
+                    {% trans 'logout' %}<span class="sr-only">(current)</span>
+                </a>
               </li>
 
                 {% comment %}
@@ -197,9 +200,6 @@
                       </li>
                   {% endfor %}
               {% endwith %}
-                <a class="nav-link text-capitalize text-muted" href="{% url 'logout' %}">
-                    {% trans 'logout' %}<span class="sr-only">(current)</span>
-                </a>
             </ul>
           </div>
         </nav>
