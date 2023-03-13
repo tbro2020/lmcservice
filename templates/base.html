@@ -147,7 +147,7 @@
           <div class="sidebar-sticky">
 
             <div class="col text-center mt-1 mb-1">
-                <img src="https://fra1.digitaloceanspaces.com/lmc-storage/image/logo.png?AWSAccessKeyId=62E43JZSJLD4WY257YQJ&Signature=Y3VCMXzD7KMH8g4T0VvtBiAR4%2Fc%3D&Expires=1678746430" class="img-fluid" />
+                <img width="64" src="https://fra1.digitaloceanspaces.com/lmc-storage/image/logo.png?AWSAccessKeyId=62E43JZSJLD4WY257YQJ&Signature=Y3VCMXzD7KMH8g4T0VvtBiAR4%2Fc%3D&Expires=1678746430" class="img-fluid" />
             </div>
 
             {% if request.user.company %}
@@ -169,7 +169,7 @@
                         <span class="badge badge-primary">[{{ request.user.company.solde }}]</span>
                     {% endif %}
                 </a>
-                <a class="nav-link text-capitalize text-muted" href="{% url 'logout' %}">
+                <a class="nav-link text-capitalize text-danger" href="{% url 'logout' %}">
                     {% trans 'logout' %}<span class="sr-only">(current)</span>
                 </a>
               </li>
