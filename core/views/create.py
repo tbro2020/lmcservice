@@ -41,8 +41,9 @@ class Create(View):
 
         obj = form.save(commit=False)
 
-        if hasattr(model, "created_by"): obj.created_by = request.user
-        if hasattr(model, "company"): obj.company = request.user.company
+        fields = [field.name for field in model._meta.fields]
+        if "created_by" in fields: obj.created_by = request.user
+        if "company" in fields: obj.company = request.user.company
         obj.save()
 
         if hasattr(model, "inline_model_form"):

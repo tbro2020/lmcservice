@@ -78,7 +78,8 @@ class Edit(View):
             return render(request, f"core/update.html", locals())
 
         obj = form.save(commit=True)
-        if hasattr(model, "updated_by"): obj.updated_by = request.user
+        if "updated_by" in [field.name for field in model._meta.fields]:
+            obj.updated_by = request.user
 
         obj.save()
         if hasattr(model, "inline_model_form"): inlineformset.save()

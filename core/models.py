@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext as _
-from django.shortcuts import reverse
 from django.db import models
 
 from djmoney.models.fields import MoneyField
