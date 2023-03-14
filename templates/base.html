@@ -233,6 +233,11 @@
             $("input, select").addClass("form-control-sm");
             $(".add-row").addClass("col btn btn-primary mt-3");
             $(".selectmultiple").select2();
+
+            $("select").each(function(){
+                const len = $(this).find("option").length;
+                if(len > 20) $(this).select2();
+            });
         });
     </script>
 
