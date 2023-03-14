@@ -18,7 +18,8 @@ class Create(View):
             inline = getattr(model, "inline_model_form")
             _model = apps.get_model(app_label=inline.get("app_label"), model_name=inline.get("model_name"))
             _fields = _model.form_fields if hasattr(_model, "form_fields") else "__all__"
-            inlineformset = inlineformset_factory(model, _model, form=modelform_factory(_model, fields=_fields), extra=1)
+            inlineformset = inlineformset_factory(model, _model, form=modelform_factory(_model, fields=_fields),
+                                                  extra=1, can_delete=False)
         return render(request, f"core/create.html", locals())
 
     def post(self, request, app, model):
@@ -32,8 +33,7 @@ class Create(View):
             inline = getattr(model, "inline_model_form")
             _model = apps.get_model(app_label=inline.get("app_label"), model_name=inline.get("model_name"))
             _fields = _model.form_fields if hasattr(_model, "form_fields") else "__all__"
-            inlineformset = inlineformset_factory(model, _model, form=modelform_factory(_model, fields=_fields),
-                                                  extra=1, can_delete=False)(request.POST)
+            inlineformset = inlineformset_factory(model, _model, form=modelform_factory(_model, fields=_fields))(request.POST)
 
         if not form.is_valid() or (inlineformset and not inlineformset.is_valid()):
             return render(request, f"core/create.html", locals())
