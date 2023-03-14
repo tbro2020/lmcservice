@@ -143,7 +143,7 @@
         {% endcache %}
         {% endcomment %}
 
-        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+        <nav class="col-md-2 d-none d-md-block bg-dark text-light sidebar">
           <div class="sidebar-sticky">
 
             <div class="col text-center mt-1 mb-1">
@@ -167,7 +167,7 @@
             <ul class="nav flex-column">
 
               <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'core:home' %}">
+                <a class="nav-link text-light {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'core:home' %}">
                   {% trans 'Home' %} <span class="sr-only">(current)</span>
                     {% if request.user.company %}
                         <span class="badge badge-primary">[{{ request.user.company.solde }}]</span>
@@ -195,7 +195,7 @@
                         <ul>
                             {% for model in models %}
                                 <li class="text-capitalize">
-                                    <a class="nav-link text-capitalize {% if request.resolver_match.kwargs.model == model.name %}active{% endif %}" href="{% url 'core:list' key model.name 1 %}">
+                                    <a class="nav-link text-light text-capitalize {% if request.resolver_match.kwargs.model == model.name %}active{% endif %}" href="{% url 'core:list' key model.name 1 %}">
                                       {{ model.verbose}} <span class="sr-only">(current)</span>
                                     </a>
                                 </li>
