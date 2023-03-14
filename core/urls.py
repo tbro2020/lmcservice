@@ -16,11 +16,11 @@ from core.views.action import *
 app_name = "core"
 
 urlpatterns = [
-    path("", cache_page(60*60)(login_required(Home.as_view())), name="home"),
-    # path("", login_required(Home.as_view()), name="home"),
-
+    # apply cache with memcached
+    # path("", cache_page(60*60)(login_required(Home.as_view())), name="home"),
     # path("create/<str:app>/<str:model>", cache_page(60*60)(Create.as_view()), name="create"),
 
+    path("", login_required(Home.as_view()), name="home"),
     path("create/<str:app>/<str:model>", login_required(Create.as_view()), name="create"),
     path("edit/<str:app>/<str:model>/<int:pk>", login_required(Edit.as_view()), name="edit"),
     path("list/<str:app>/<str:model>/<int:page>", login_required(List.as_view()), name="list"),

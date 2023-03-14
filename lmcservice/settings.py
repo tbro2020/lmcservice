@@ -149,7 +149,7 @@ LOGOUT_REDIRECT_URL = "login"
 LOGIN_REDIRECT_URL = "core:home"
 
 # DEBUG TOOLBAR
-if not DEBUG:
+if DEBUG:
     import socket  # only if you haven't already imported this
 
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
