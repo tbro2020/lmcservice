@@ -219,6 +219,7 @@ class Operation(models.Model):
 
     list_actions = ({
         "verbose_name": "Export",
+        "permission": "service.view_operation",
         "url": reverse("core:export", kwargs={"app": "service", "model": "operation"})
     },)
 

@@ -13,13 +13,20 @@
             <h1 class="h2 text-capitalize">{{ model|getattr:'_meta'|getattr:'verbose_name' }}</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
-                    {% if "service.view_operation" in perms %}
-                        <a href="{% url 'core:create' app model|getattr:'_meta'|getattr:'model_name' %}" class="btn btn-sm btn-outline-secondary">
-                            {% trans 'Add' %}
-                        </a>
-                    {% endif %}
+                    {% with model|getattr:'_meta'|getattr:'model_name' as model_name %}
+                        {% with app|stringbuilder:".add_"|stringbuilder:model_name as perm %}
+                            {% if perm in perms %}
+                                <a href="{% url 'core:create' app model|getattr:'_meta'|getattr:'model_name' %}" class="btn btn-sm btn-outline-secondary">
+                                    {% trans 'Add' %}
+                                </a>
+                            {% endif %}
+                        {% endwith %}
+                    {% endwith %}
+
                   {% for action in model.list_actions %}
-                      <a href="{{ action.url }}?{{ request.GET.urlencode }}" class="btn btn-sm btn-outline-primary">{% trans action.verbose_name %}</a>
+                      {% if action.permission in perms %}
+                          <a href="{{ action.url }}?{{ request.GET.urlencode }}" class="btn btn-sm btn-outline-primary">{% trans action.verbose_name %}</a>
+                      {% endif %}
                   {% endfor %}
               </div>
             </div>
