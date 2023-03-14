@@ -27,7 +27,15 @@
 
             <div class="btn-toolbar mb-2 mb-md-0">
               <div class="btn-group mr-2">
-                <a href="{% url 'core:delete' app model|getattr:'_meta'|getattr:'model_name' obj.id %}" class="btn btn-sm btn-outline-danger">{% trans 'Delete' %}</a>
+
+
+                {% with model|getattr:'_meta'|getattr:'model_name' as model_name %}
+                    {% with app|stringbuilder:".delete_"|stringbuilder:model_name as perm %}
+                        {% if perm in perms %}
+                            <a href="{% url 'core:delete' app model_name obj.id %}" class="btn btn-sm btn-outline-danger">{% trans 'Delete' %}</a>
+                        {% endif %}
+                    {% endwith %}
+                {% endwith %}
 
                   {% for action in model.change_actions %}
                       {% if action.permission in perms and obj|attrmatch:action.limitation and action.method == "GET" and action.condition|eval:request %}

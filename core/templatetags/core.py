@@ -62,3 +62,8 @@ def divide(left, right):
 @register.filter(name="eval")
 def evaluation(expression, request):
     return eval(expression)
+
+
+@register.filter(name="stringbuilder")
+def stringbuilder(a, b):
+    return f"{str(a)}{str(b)}"
