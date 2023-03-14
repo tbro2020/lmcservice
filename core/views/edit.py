@@ -45,7 +45,7 @@ class Edit(View):
         if hasattr(model, "inline_model_form"):
             inline = modelAndFields(request, model)
             inlineformset = inlineformset_factory(model, inline[0], form=modelform_factory(inline[0], fields=inline[1]),
-                                                  extra=1, can_delete=True)(instance=obj)
+                                                  extra=0, can_delete=True)(instance=obj)
 
         return render(request, f"core/update.html", locals())
 
