@@ -16,8 +16,8 @@ from core.views.action import *
 app_name = "core"
 
 urlpatterns = [
-    # path("", cache_page(60*60)(login_required(Home.as_view())), name="home"),
-    path("", login_required(Home.as_view()), name="home"),
+    path("", cache_page(60*60)(login_required(Home.as_view())), name="home"),
+    # path("", login_required(Home.as_view()), name="home"),
 
     # path("create/<str:app>/<str:model>", cache_page(60*60)(Create.as_view()), name="create"),
 
