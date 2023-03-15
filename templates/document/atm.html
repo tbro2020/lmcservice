@@ -81,7 +81,7 @@
                         <div class="col text-end"><img class="img-fluid" src="{% static "image/logo.png" %}" alt="lmc-logo"></div>
                         <div class="col small-text">
                             <h5>LMC</h5>
-                            <small>Ligne Maritime Congolaise</small><br>
+                            <small>Lignes Maritimew Congolaises</small><br>
                             <small>13 Avenue des Aviateurs, Commune de la Gombe, Kinshasa</small>
                             <p>B.P. 8038 - KINSHASA - RDC</p>
                         </div>
@@ -193,7 +193,7 @@
                         <div class="card bg-dark text-white" style="padding: 1.5%;">
                             <b class="fs-6">VALIDATED BY : <small class="text-muted"> validee par</small></b>
                             {% if obj.status == "COMPLETED" %}
-                                <b class="text-uppercase fs-6">{{ obj.updated_by.custom_office.supervisor|default:"LMC" }}</b>
+                                <b class="text-uppercase fs-6">{{ obj.updated_by.office.supervisor|default:"LMC" }}</b>
                             {% else %}
                                 <b class="text-uppercase fs-6">{{ obj.updated_by.full_name }}</b>
                             {% endif %}

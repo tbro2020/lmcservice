@@ -175,6 +175,7 @@ class Operation(models.Model):
         },)
     }
 
+    list_export_fields = ("id", "company", "status", "cost", "payment_method")
     list_display_fields = ("id", "company", "status", "cost", "payment_method")
     inline_model_form = {"app_label": "service", "model_name": "Product"}
 
@@ -222,8 +223,6 @@ class Operation(models.Model):
         "permission": "service.view_operation",
         "url": reverse("core:export", kwargs={"app": "service", "model": "operation"})
     },)
-
-    # check permission
 
     class Meta:
         verbose_name = _("Operation")
