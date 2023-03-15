@@ -67,7 +67,7 @@
                     <div class="col text-start">
                         <h2>INVOICE</h2>
                         <p class="small-text">
-                            <b>{{ obj.updated_by.office.billing_info|default:"Ligne Maritime Congolaise" }}</b> <br>
+                            <b>{{ obj.updated_by.office.billing_info|default:"Lignes Maritimes Congolaises" }}</b> <br>
                             {{ obj.updated_by.office.billing_info.address|default:"13 Avenue des Aviateurs, Commune de la Gombe" }} <br>
                             {{ obj.updated_by.office.billing_info.postal_code|default:"B.P. 8038" }} <br>
                             {{ obj.updated_by.office.billing_info.city|default:"Kinshasa" }} <br>
@@ -189,8 +189,6 @@
                     </tr>
                     {% endfor %}
 
-
-
                     <tr>
                         <td colspan="4"><b>Total Amount : </b></td>
                         <td style="font-weight: bolder;">{{ obj.cost|default:"-" }}</td>
@@ -216,7 +214,7 @@
                         <h5>BANK ACCOUNT DETAILS</h5>
                         <dl class="row" style="margin-bottom: 0px;">
                             <dt class="col-sm-3">Account Name</dt>
-                            <dd class="col-sm-9 text-uppercase">{{ obj.updated_by.office.billing_info|default:"Ligne Maritime Congolaise" }}</dd>
+                            <dd class="col-sm-9 text-uppercase">{{ obj.updated_by.office.billing_info|default:"Lignes Maritimes Congolaises" }}</dd>
 
                             <dt class="col-sm-3">Bank</dt>
                             <dd class="col-sm-9">{{ obj.updated_by.office.billing_info.bank_name|default:"Bank Name" }}</dd>
