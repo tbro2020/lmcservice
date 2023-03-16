@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load core %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+    <div style="z-index: -1; position: fixed; color: grey;opacity: 0.1;">
+        <h1 style="font-size: 10rem;">{{ model|getattr:'_meta'|getattr:'verbose_name' }}</h1>
+    </div>
+
+    <div>
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+            <div>
+                <h1 class="h2 text-capitalize mb-0">{{ model|getattr:'_meta'|getattr:'verbose_name' }} #{{ obj.id }}</h1>
+                <small>
+                    {% with model|getattr:'_meta'|getattr:'model_name' as model_name %}
+                        {% with app|stringbuilder:".delete_"|stringbuilder:model_name as perm %}
+                            {% if perm in perms %}
+                                <a href="{% url 'core:list' app model|getattr:'_meta'|getattr:'model_name' %}" class="text-capitalize">{{ model|getattr:'_meta'|getattr:'verbose_name_plural' }}</a> /
+                            {% endif %}
+                        {% endwith %}
+                    {% endwith %}
+                    {{ obj.id }}
+                </small>
+            </div>
+
+            <div class="btn-toolbar mb-2 mb-md-0">
+              <div class="btn-group mr-2">
+
+                    {% with model|getattr:'_meta'|getattr:'model_name' as model_name %}
+                        {% with app|stringbuilder:".delete_"|stringbuilder:model_name as perm %}
+                            {% if perm in perms %}
+                                <a href="{% url 'core:delete' app model_name obj.id %}" class="btn btn-sm btn-outline-danger">{% trans 'Delete' %}</a>
+                            {% endif %}
+                        {% endwith %}
+                    {% endwith %}
+
+                    {% for action in model.change_actions %}
+                      {% if action.permission in perms and obj|attrmatch:action.limitation and action.method == "GET" and action.condition|eval:request %}
+                          <a href="{{ action.url }}?id={{ obj.id }}" class="btn btn-sm btn-outline-primary">{{ action.verbose_name }}</a>
+                      {% endif %}
+                    {% endfor %}
+              </div>
+
+                {% for action in model.change_actions %}
+                  {% if action.permission in perms and obj|attrmatch:action.limitation and action.method == "POST" and action.condition|eval:request %}
+                      <form action="{{ action.url }}?id={{ pk }}" id="form-{{ action.verbose_name }}" method="{{ action.method }}">
+                        {% csrf_token %}
+                        {% for key, value in action.values.items %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endfor %}
+                        <button type="submit" class="btn btn-sm btn-outline-primary">{{ action.verbose_name }}</button>
+                      </form>
+                  {% endif %}
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-5">
+        <dl class="row">
+            {% with model|getattr:'_meta'|getattr:'fields' as fields %}
+                {% for field in fields %}
+                    {% if obj|getattr:field.name %}
+                        <dt class="col-sm-3">{{ field.verbose_name }}:</dt>
+                        <dd class="col-sm-3">
+                            {% if field.name == "status" %}
+                                <span class="badge badge-{{ obj|getattr:field.name|displaystatus }}">{{ obj|getattr:field.name }}</span>
+                            {% else %}
+                                {{ obj|getattr:field.name }}
+                            {% endif %}
+                        </dd>
+                    {% endif %}
+                {% endfor %}
+            {% endwith %}
+        </dl>
+    </div>
+
+    <hr />
+
+    <div class="mb-5">
+        {% for obj in qs %}
+            <h4>{{ obj|getattr:'_meta'|getattr:'verbose_name' }}#{{ obj.id }}</h4>
+            <dl class="row">
+                {% with obj|getattr:'_meta'|getattr:'fields' as fields %}
+                    {% for field in fields %}
+                        {% if obj|getattr:field.name %}
+                            <dt class="col-sm-3">{{ field.verbose_name }}:</dt>
+                            <dd class="col-sm-3">
+                                {{ obj|getattr:field.name }}
+                            </dd>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
+            </dl>
+        {% endfor %}
+    </div>
+
+
+{% endblock content %}

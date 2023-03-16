@@ -3,8 +3,16 @@ from django.apps import apps
 from django.shortcuts import render, reverse, redirect, get_object_or_404, HttpResponse
 from django.views import View
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
-class Document(View):
+
+class Document(LoginRequiredMixin, PermissionRequiredMixin, View):
+
+    def get_permission_required(self):
+        data = self.kwargs
+        return f"{data.get('app')}.view_{data.get('model')}",
+
     def get(self, request, app, model, template):
         model = apps.get_model(app, model)
         obj = get_object_or_404(model, **request.GET.dict())

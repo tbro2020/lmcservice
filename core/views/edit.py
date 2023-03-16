@@ -8,6 +8,9 @@ from django.views import View
 from core.utils import modelform_factory_data
 from django.forms.fields import TypedChoiceField
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
+
 
 def modelAndFields(request, model):
     inline = getattr(model, "inline_model_form")
@@ -21,7 +24,12 @@ def modelAndFields(request, model):
     return _model, _fields
 
 
-class Edit(View):
+class Edit(LoginRequiredMixin, PermissionRequiredMixin, View):
+
+    def get_permission_required(self):
+        data = self.kwargs
+        return f"{data.get('app')}.change_{data.get('model')}",
+
     def get(self, request, app, model, pk):
         model = apps.get_model(app, model)
 
@@ -83,5 +91,5 @@ class Edit(View):
 
         obj.save()
         if hasattr(model, "inline_model_form"): inlineformset.save()
-        messages.success(request, f"{model._meta.verbose_name} updated successfully")
+        messages.success(request, f"{model._meta.verbose_name} {getattr(obj, 'status', '')} updated successfully")
         return redirect(reverse('core:edit', kwargs={"app": app, "model": model._meta.model_name, "pk": pk}))

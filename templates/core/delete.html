@@ -9,7 +9,7 @@
             <div>
                 <h1 class="h2">{% trans 'Delete' %} {{ model|getattr:'_meta'|getattr:'verbose_name' }}</h1>
                 <small>
-                    <a href="{% url 'core:list' app model|getattr:'_meta'|getattr:'model_name' 1 %}" class="text-capitalize">{{ model|getattr:'_meta'|getattr:'verbose_name_plural' }}</a>
+                    <a href="{% url 'core:list' app model|getattr:'_meta'|getattr:'model_name' %}" class="text-capitalize">{{ model|getattr:'_meta'|getattr:'verbose_name_plural' }}</a>
                     / <a href="{% url 'core:edit' model|getattr:'_meta'|getattr:'app_label' model|getattr:'_meta'|getattr:'model_name' obj.id %}">Obj#{{ obj.id }}</a> /
                     {% trans 'Delete' %}
                 </small>

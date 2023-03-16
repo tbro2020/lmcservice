@@ -9,13 +9,21 @@ from django.views import View
 
 from core.paginator import Paginator
 from django.core.exceptions import FieldDoesNotExist
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
-class List(View):
-    def get(self, request, app, model, page):
-        model = apps.get_model(app, model)
+class List(LoginRequiredMixin, PermissionRequiredMixin, View):
+
+    def get_permission_required(self):
+        data = self.kwargs
+        return f"{data.get('app')}.view_{data.get('model')}",
+
+    def get(self, request, app, model):
         data = request.GET.dict()
-        if "q" in data: del data["q"]
+        model = apps.get_model(app, model)
+        field_names = [field.name for field in model._meta.get_fields()]
+        data = {key: value for key, value in data.items() if key in field_names}
 
         fields = [field for field in model._meta.fields if field.name in model.list_display_fields] if \
             hasattr(model, "list_display_fields") else \
@@ -38,5 +46,5 @@ class List(View):
                  field.get_internal_type() == 'CharField']
             qs = qs.filter(reduce(operator.or_, q))
         qs = qs.order_by("-id")
-        qs = Paginator(qs, 30).page(page)
+        qs = Paginator(qs, 30).page(request.GET.get('page', 1))
         return render(request, f"core/list.html", locals())

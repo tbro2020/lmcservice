@@ -195,7 +195,7 @@
                         <ul>
                             {% for model in models %}
                                 <li class="text-capitalize">
-                                    <a class="nav-link text-capitalize {% if request.resolver_match.kwargs.model == model.name %}active{% else %}text-light{% endif %}" href="{% url 'core:list' key model.name 1 %}">
+                                    <a class="nav-link text-capitalize {% if request.resolver_match.kwargs.model == model.name %}active{% else %}text-light{% endif %}" href="{% url 'core:list' key model.name %}">
                                       {{ model.verbose}} <span class="sr-only">(current)</span>
                                     </a>
                                 </li>

@@ -65,9 +65,25 @@
                             {% endif %}
                         </td>
                         {% endfor %}
-                        <td><a href="{% url 'core:edit' model|getattr:'_meta'|getattr:'app_label' model|getattr:'_meta'|getattr:'model_name' obj|getdict:'id' %}">
-                            {% trans 'Edit | View' %}
-                        </a></td>
+                        <td>
+                            {% with model|getattr:'_meta'|getattr:'model_name' as model_name %}
+                                {% with app|stringbuilder:".change_"|stringbuilder:model_name as perm %}
+                                    {% if perm in perms %}
+                                        <a href="{% url 'core:edit' model|getattr:'_meta'|getattr:'app_label' model|getattr:'_meta'|getattr:'model_name' obj|getdict:'id' %}">
+                                            {% trans 'Change' %}
+                                        </a>
+                                    {% endif %}
+                                {% endwith %}|
+                                {% with app|stringbuilder:"view_"|stringbuilder:model_name as perm %}
+                                    {% if perm in perms %}
+                                        <a href="{% url 'core:view' model|getattr:'_meta'|getattr:'app_label' model|getattr:'_meta'|getattr:'model_name' obj|getdict:'id' %}">
+                                            {% trans 'View' %}
+                                        </a>
+                                    {% endif %}
+                                {% endwith %}
+                            {% endwith %}
+
+                        </td>
                     </tr>
                 {% empty %}
                     <tr>
@@ -80,7 +96,17 @@
             </table>
         </div>
 
-        # Apply pagination
+        {% if qs.has_other_pages %}
+            <div class="col text-center">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    {% if qs.has_previous %}
+                    <a href="{% url 'core:list' app model|getattr:'_meta'|getattr:'model_name' %}?page={{ qs.previous_page_number }}" class="btn btn-secondary">{% trans "Previous" %}</a>
+                    {% endif %}
+                  <a href="#" class="btn btn-secondary">{{ request.GET.page|default:1 }}</a>
+                  <a href="{% url 'core:list' app model|getattr:'_meta'|getattr:'model_name' %}?page={{ qs.next_page_number }}" class="btn btn-secondary">{% trans "Next" %}</a>
+                </div>
+            </div>
+        {% endif %}
 
     </div>
 {% endblock content %}

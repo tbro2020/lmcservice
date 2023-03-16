@@ -7,6 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from core.models import *
 from django_countries.fields import CountryField
 
+from django.db.models import Sum
 
 def upload_directory_file(instance, filename):
     return '{0}/{1}/{2}'.format(instance._meta.app_label, instance._meta.model_name, filename)
@@ -42,6 +43,24 @@ class Company(models.Model):
 
     list_display_fields = ("id", "name", "country", "balance", "is_active")
     # inline_model_form = {"app_label": "service", "model_name": "Product"}
+
+    change_actions = ({
+      "verbose_name": "Activate",
+      "method": "POST",
+      "url": reverse("core:action", kwargs={"app": "service", "model": "company"}),
+      "permission": "service.change_company",
+      "limitation": {"is_active": False},
+      "values": {"is_active": True},
+      "condition": "request.user.is_staff"
+    }, {
+      "verbose_name": "Dis-activate",
+      "method": "POST",
+      "url": reverse("core:action", kwargs={"app": "service", "model": "company"}),
+      "permission": "service.change_company",
+      "limitation": {"is_active": True},
+      "values": {"is_active": False},
+      "condition": "request.user.is_staff"
+    })
 
     def __str__(self):
         return self.name
@@ -196,7 +215,7 @@ class Operation(models.Model):
         }, {
             "verbose_name": "Checkpoint",
             "method": "GET",
-            "url": reverse("core:list", kwargs={"app": "service", "model": "checkpoint", "page": 1}),
+            "url": reverse("core:list", kwargs={"app": "service", "model": "checkpoint"}),
             "permission": "service.view_checkpoint",
             "limitation": {"status": COMPLETED},
             "condition": "1"
@@ -224,6 +243,10 @@ class Operation(models.Model):
         "url": reverse("core:export", kwargs={"app": "service", "model": "operation"})
     },)
 
+    def total(self):
+        qs = Product.objects.values('total').filter(operation=self)
+        return qs.aggregate(Sum('total')).get('total__sum', 0)
+
     class Meta:
         verbose_name = _("Operation")
         verbose_name_plural = _("Operations")
@@ -248,6 +271,9 @@ class Product(models.Model):
 
     # Extra field of control
     penalty = models.IntegerField(_("Penalty applied"), help_text=_("The penalty is applied in %"), default=0)
+    total = MoneyField(verbose_name=_("Total($)"), max_digits=14, decimal_places=2, null=True, default=None,
+                       default_currency='USD')
+
     is_transshipped = models.BooleanField(_("Is transshipped"), default=False)
 
     is_activated = models.BooleanField(_("Is activated"), help_text=_("This ATM is active"), default=True)

@@ -44,14 +44,7 @@ class User(AbstractUser):
         })
     }
 
-    change_actions = ({
-        "verbose_name": "Reset password",
-        "method": "GET",
-        "url": "#",
-        "permission": "can_change_user",
-        "limitation": {},
-        "condition": "1"
-    },)
+    change_actions = ()
 
     def __str__(self):
         return self.email
