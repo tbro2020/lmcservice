@@ -23,6 +23,8 @@ urlpatterns = [
     path('login', LoginView.as_view(), name="login"),
     path('logout', LogoutView.as_view(), name="logout"),
 
+    path('', include('django.contrib.auth.urls')),
+
     path('__debug__/', include('debug_toolbar.urls')),
     path('', include('core.urls'))
 ]

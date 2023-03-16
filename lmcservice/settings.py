@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django_countries',
     'crispy_bootstrap4',
     'django_json_widget',
+    'django_filters',
 
     'core',
     'service'
@@ -150,6 +151,8 @@ LOGOUT_REDIRECT_URL = "login"
 LOGIN_REDIRECT_URL = "core:home"
 
 # DEBUG TOOLBAR
+HOSTNAME = env.get_value("HOSTNAME", default="localhost:8000")
+
 if DEBUG:
     import socket  # only if you haven't already imported this
 
@@ -173,3 +176,6 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = TIME_ZONE
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

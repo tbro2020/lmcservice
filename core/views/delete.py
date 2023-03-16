@@ -13,7 +13,6 @@ class Delete(LoginRequiredMixin, PermissionRequiredMixin, View):
         data = self.kwargs
         return f"{data.get('app')}.delete_{data.get('model')}",
 
-
     def get(self, request, app, model, pk):
         model = apps.get_model(app, model)
 
@@ -25,4 +24,4 @@ class Delete(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         obj = get_object_or_404(model, pk=pk)
         obj.delete()
-        return redirect(reverse('core:list', kwargs={"app": app, "model": model._meta.model_name, "page": 1}))
+        return redirect(reverse('core:list', kwargs={"app": app, "model": model._meta.model_name}))

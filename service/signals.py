@@ -2,8 +2,12 @@ from django.db.models.signals import pre_save, post_save
 from django.utils.translation import gettext_lazy as _
 from django.dispatch import receiver
 
+from django.contrib.auth.models import Group, Permission
+
 from service.models import *
 from service import task
+
+from datetime import date
 
 
 @receiver(pre_save, sender=Product)
@@ -33,4 +37,12 @@ def post_company(sender, instance, created, **kwargs):
         qs.update(is_active=instance.is_active)
         return
     if not instance.is_active: return
-    User.objects.create_user(instance.email, company=instance, is_active=True)
+    user = User.objects.create_user(instance.email, password=f"Default@LMC-{date.today().year}",
+                                    company=instance, is_active=True)
+    group, created = Group.objects.get_or_create(name="Forwarder")
+    if created:
+        permissions = Permission.objects.filter(codename__in=["add_user", "view_user", "change_user", "delete_user",
+                                                              "add_operation", "view_operation", "change_operation",
+                                                              "delete_operation"])
+        group.permissions.add(*list(permissions))
+    user.groups.add(group)

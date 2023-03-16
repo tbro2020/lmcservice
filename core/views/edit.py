@@ -36,6 +36,11 @@ class Edit(LoginRequiredMixin, PermissionRequiredMixin, View):
         obj = get_object_or_404(model, pk=pk)
         data = modelform_factory_data(model)
 
+        # check if the model can manage edit requirement
+        if hasattr(model, "editable_if"):
+            if not eval(model.editable_if):
+                return redirect(reverse("core:view", kwargs={"app": app, "model": model._meta.model_name, "pk": pk}))
+
         if hasattr(model, "extra") and "fields" in model.extra:
             for field in model.extra.get("fields"):
                 if eval(field.get("condition")):
@@ -80,7 +85,8 @@ class Edit(LoginRequiredMixin, PermissionRequiredMixin, View):
         if hasattr(model, "inline_model_form"):
             inline = modelAndFields(request, model)
             inlineformset = inlineformset_factory(model, inline[0], form=modelform_factory(inline[0], fields=inline[1])
-                                                  , can_delete=True)(request.POST or None, request.FILES or None, instance=obj)
+                                                  , can_delete=True)(request.POST or None, request.FILES or None,
+                                                                     instance=obj)
 
         if not form.is_valid() or (hasattr(locals(), "inlineformset") and not inlineformset.is_valid()):
             return render(request, f"core/update.html", locals())

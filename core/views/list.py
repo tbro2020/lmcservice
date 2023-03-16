@@ -8,6 +8,7 @@ from django.shortcuts import render
 from django.views import View
 
 from core.paginator import Paginator
+from core.filter import filterset_factory
 from django.core.exceptions import FieldDoesNotExist
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -23,7 +24,7 @@ class List(LoginRequiredMixin, PermissionRequiredMixin, View):
         data = request.GET.dict()
         model = apps.get_model(app, model)
         field_names = [field.name for field in model._meta.get_fields()]
-        data = {key: value for key, value in data.items() if key in field_names}
+        data = {key: value for key, value in data.items() if key in field_names and value}
 
         fields = [field for field in model._meta.fields if field.name in model.list_display_fields] if \
             hasattr(model, "list_display_fields") else \
@@ -45,6 +46,11 @@ class List(LoginRequiredMixin, PermissionRequiredMixin, View):
             q = [Q(**{f"{field.name}__icontains": value}) for field in fields if
                  field.get_internal_type() == 'CharField']
             qs = qs.filter(reduce(operator.or_, q))
+
+        if hasattr(model, "filter_fields"):
+            filter = filterset_factory(model, getattr(model, "filter_fields", []))(request.GET, queryset=qs)
+            qs = filter.qs
+
         qs = qs.order_by("-id")
         qs = Paginator(qs, 30).page(request.GET.get('page', 1))
         return render(request, f"core/list.html", locals())
