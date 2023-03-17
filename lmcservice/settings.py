@@ -10,9 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-import environ
-import dj_database_url
+import os
+import platform
+import subprocess
+import sys
 from pathlib import Path
+
+import dj_database_url
+import environ
+import pdfkit
 
 env = environ.Env()
 environ.Env.read_env()
@@ -151,12 +157,14 @@ AUTH_USER_MODEL = 'core.User'
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = "login"
 LOGIN_REDIRECT_URL = "core:home"
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 # DEBUG TOOLBAR
 HOSTNAME = env.get_value("HOSTNAME", default="localhost:8000")
 
 if DEBUG:
     import socket  # only if you haven't already imported this
+
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 
@@ -189,4 +197,8 @@ CELERY_TIMEZONE = TIME_ZONE
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
+os.environ['PATH'] += os.pathsep + os.path.dirname(sys.executable)
+WKHTMLTOPDF_CMD = subprocess.Popen(['which', os.environ.get('WKHTMLTOPDF_BINARY', 'wkhtmltopdf')],
+                                   stdout=subprocess.PIPE).communicate()[0].strip()
+PDFKIT_CONFIG = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_CMD)

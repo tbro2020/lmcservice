@@ -30,7 +30,8 @@ class Company(models.Model):
     # users = models.ManyToManyField(User, blank=True)
     is_active = models.BooleanField(_("Activate"), help_text=_("By activating/desactivating all account linked will "
                                                                "impacted"), default=False)
-    term_condition = models.BooleanField(_(" I read & accept the terms & conditions"), help_text=_("Aware of term and condition"), default=True)
+    term_condition = models.BooleanField(_(" I read & accept the terms & conditions"),
+                                         help_text=_("Aware of term and condition"), default=True)
 
     balance = MoneyField(verbose_name=_("Solde"), max_digits=14, decimal_places=2, default_currency='USD', default=0.0)
 
@@ -42,7 +43,6 @@ class Company(models.Model):
                    "term_condition")
 
     list_display_fields = ("id", "name", "country", "balance", "is_active")
-    # inline_model_form = {"app_label": "service", "model_name": "Product"}
 
     change_actions = ({
       "verbose_name": "Activate",
