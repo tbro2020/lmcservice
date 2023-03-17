@@ -72,7 +72,7 @@ class Edit(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         if hasattr(model, "extra") and "fields" in model.extra:
             for field in model.extra.get("fields"):
-                if eval(field.get("condition")):
+                if eval(field.get("condition", "False")):
                     data["fields"].append(field.get("name"))
 
         form = modelform_factory(model, **data)(request.POST or None, instance=obj)
@@ -97,6 +97,6 @@ class Edit(LoginRequiredMixin, PermissionRequiredMixin, View):
         if isinstance(obj, Operation): obj.updated_by = request.user
 
         obj.save()
-        if hasattr(model, "inline_model_form"): inlineformset.save()
+        if hasattr(locals(), "inlineformset"): inlineformset.save()
         messages.success(request, f"{model._meta.verbose_name} {getattr(obj, 'status', '')} updated successfully")
         return redirect(reverse('core:edit', kwargs={"app": app, "model": model._meta.model_name, "pk": pk}))
