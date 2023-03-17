@@ -179,7 +179,7 @@ else:
 CSRF_TRUSTED_ORIGINS = []  # ["https://c855-2c0f-e00-607-a300-31f9-b0c8-8e6c-4ad9.eu.ngrok.io"]
 
 # CELERY related settings
-BROKER_URL = env('REDIS_URL')
+CELERY_BROKER_URL = env('REDIS_URL')
 CELERY_RESULT_BACKEND = env('REDIS_URL')
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
