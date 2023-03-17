@@ -55,6 +55,7 @@ INSTALLED_APPS = [
 if DEBUG: INSTALLED_APPS.append("debug_toolbar")
 
 MIDDLEWARE = [
+    'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware'
 ]
 
 if DEBUG: MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
@@ -155,7 +157,6 @@ HOSTNAME = env.get_value("HOSTNAME", default="localhost:8000")
 
 if DEBUG:
     import socket  # only if you haven't already imported this
-
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 
@@ -179,3 +180,5 @@ CELERY_TIMEZONE = TIME_ZONE
 
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'

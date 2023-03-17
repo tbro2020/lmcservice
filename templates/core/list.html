@@ -110,7 +110,7 @@
         </div>
 
         {% if qs.has_other_pages %}
-            <div class="col text-center">
+            <div class="col text-center mb-5">
                 <div class="btn-group" role="group" aria-label="Basic example">
                     {% if qs.has_previous %}
                     <a href="{% url 'core:list' app model|getattr:'_meta'|getattr:'model_name' %}?page={{ qs.previous_page_number }}" class="btn btn-secondary">{% trans "Previous" %}</a>
@@ -120,6 +120,5 @@
                 </div>
             </div>
         {% endif %}
-
     </div>
 {% endblock content %}

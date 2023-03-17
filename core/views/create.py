@@ -55,6 +55,9 @@ class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
         if "company" in fields: obj.company = request.user.company
         obj.save()
 
+        if hasattr(model, "groups") and not request.user.is_staff:
+            obj.groups.add(*list(request.user.groups.all()))
+
         if hasattr(model, "inline_model_form"):
             inlines = inlineformset.save(commit=False)
             for inline in inlines:

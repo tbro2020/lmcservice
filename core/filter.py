@@ -2,6 +2,10 @@ import django_filters
 
 
 class AdvanceFilterSet(django_filters.FilterSet):
+    updated = django_filters.DateFromToRangeFilter(
+        label='Updated',
+        widget=django_filters.widgets.RangeWidget(attrs={'placeholder': 'yyyy-mm-dd'}))
+
     created = django_filters.DateFromToRangeFilter(
         label='Created',
         widget=django_filters.widgets.RangeWidget(attrs={'placeholder': 'yyyy-mm-dd'}))

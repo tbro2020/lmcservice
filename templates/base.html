@@ -138,7 +138,7 @@
     <div class="container-fluid">
       <div class="row">
 
-        {% cache 300 navbar request.user.username %}
+        {% cache 300 navbar request.user.email request.path %}
             <nav class="col-md-2 d-none d-md-block bg-dark text-light sidebar">
           <div class="sidebar-sticky">
 

@@ -187,7 +187,7 @@ class Operation(models.Model):
     form_fields = ("transport", "operation_type", "forwarder", "bp_file",
                    "importer_expoter", "load_point", "entry_point", "exit_point")
 
-    filter_fields = ("transport", "load_point", "entry_point", "exit_point", "updated")
+    filter_fields = ("transport", "status", "load_point", "entry_point", "exit_point", "updated", "created")
 
     editable_if = "(not request.user.is_staff and obj.status == 'CREATED') or (request.user.is_staff) or (" \
                   "request.user.is_superadmin)"
