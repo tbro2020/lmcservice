@@ -11,7 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from core.models import User
-from service.models import Company, Operation
+from service.models import Operation
 
 
 class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
