@@ -37,6 +37,7 @@ def display_status(status):
         Operation.IN_REVIEW: "warning",
         Operation.VALIDATE: "primary",
         Operation.COMPLETED: "success",
+        Operation.PAID: "success",
         Operation.REJECTED: 'rejected'
     }.get(status)
 
