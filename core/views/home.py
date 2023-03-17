@@ -3,9 +3,10 @@ from django.db.models import Count
 from django.views import View
 from service import models
 from datetime import datetime
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class Home(View):
+class Home(LoginRequiredMixin, View):
     def get(self, request):
         qs = models.Operation.objects.filter(created__year=datetime.today().year)
 

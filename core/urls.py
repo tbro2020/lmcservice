@@ -21,7 +21,7 @@ urlpatterns = [
     # path("", cache_page(60*60)(login_required(Home.as_view())), name="home"),
     # path("create/<str:app>/<str:model>", cache_page(60*60)(Create.as_view()), name="create"),
 
-    path("", login_required(Home.as_view()), name="home"),
+    path("", cache_page(60*60)(Home.as_view()), name="home"),
 
     path("list/<str:app>/<str:model>", List.as_view(), name="list"),
     path("edit/<str:app>/<str:model>/<int:pk>", Edit.as_view(), name="edit"),
