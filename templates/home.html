@@ -58,7 +58,8 @@
             datasets: [{% for key, value in data.bar.data.items %}
                 {
                     data: {{ value|safe }},
-                    label: "{{ key }}"
+                    label: "{{ key }}",
+                    backgroundColor: ["#6c757d", "#28a745", "#A9A9A9", "#C0C0C0", "#D3D3D3"]
                 },
             {% endfor %}]
           },
