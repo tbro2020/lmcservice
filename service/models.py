@@ -9,11 +9,10 @@ from django_countries.fields import CountryField
 
 from django.db.models import Sum
 
+
 def upload_directory_file(instance, filename):
     return '{0}/{1}/{2}'.format(instance._meta.app_label, instance._meta.model_name, filename)
 
-
-# -----------------------------------------------------------
 
 class Company(models.Model):
     name = models.CharField(_("Company name"), max_length=50)
@@ -45,22 +44,22 @@ class Company(models.Model):
     list_display_fields = ("id", "name", "country", "balance", "is_active")
 
     change_actions = ({
-      "verbose_name": "Activate",
-      "method": "POST",
-      "url": reverse("core:action", kwargs={"app": "service", "model": "company"}),
-      "permission": "service.change_company",
-      "limitation": {"is_active": False},
-      "values": {"is_active": True},
-      "condition": "request.user.is_staff"
-    }, {
-      "verbose_name": "Dis-activate",
-      "method": "POST",
-      "url": reverse("core:action", kwargs={"app": "service", "model": "company"}),
-      "permission": "service.change_company",
-      "limitation": {"is_active": True},
-      "values": {"is_active": False},
-      "condition": "request.user.is_staff"
-    })
+                          "verbose_name": "Activate",
+                          "method": "POST",
+                          "url": reverse("core:action", kwargs={"app": "service", "model": "company"}),
+                          "permission": "service.change_company",
+                          "limitation": {"is_active": False},
+                          "values": {"is_active": True},
+                          "condition": "request.user.is_staff"
+                      }, {
+                          "verbose_name": "Dis-activate",
+                          "method": "POST",
+                          "url": reverse("core:action", kwargs={"app": "service", "model": "company"}),
+                          "permission": "service.change_company",
+                          "limitation": {"is_active": True},
+                          "values": {"is_active": False},
+                          "condition": "request.user.is_staff"
+                      })
 
     def __str__(self):
         return self.name
@@ -70,8 +69,6 @@ class Company(models.Model):
         verbose_name_plural = _("Companies")
         unique_together = ("name", "email", "phone_number")
 
-
-# -----------------------------------------------------------
 
 class Operation(models.Model):
     IMPORTATION = "Importation"
@@ -194,9 +191,9 @@ class Operation(models.Model):
 
     extra = {
         "fields": ({
-            "condition": "request.user.is_staff",
-            "name": "status"
-        },)
+                       "condition": "request.user.is_staff",
+                       "name": "status"
+                   },)
     }
 
     list_export_fields = ("id", "company", "status", "cost", "payment_method")
@@ -204,49 +201,51 @@ class Operation(models.Model):
     inline_model_form = {"app_label": "service", "model_name": "Product"}
 
     change_actions = ({
-            "verbose_name": "Debit Note",
-            "method": "GET",
-            "url": reverse("core:document", kwargs={"app": "service", "model": "operation", "template": "invoice"}),
-            "permission": "service.view_operation",
-            "limitation": {"status": VALIDATE},
-            "condition": "1"
-        }, {
-            "verbose_name": "ATM",
-            "method": "GET",
-            "url": reverse("core:document", kwargs={"app": "service", "model": "operation", "template": "atm"}),
-            "permission": "service.view_operation",
-            "limitation": {"status": COMPLETED},
-            "condition": "1"
-        }, {
-            "verbose_name": "Checkpoint",
-            "method": "GET",
-            "url": reverse("core:list", kwargs={"app": "service", "model": "checkpoint"}),
-            "permission": "service.view_checkpoint",
-            "limitation": {"status": COMPLETED},
-            "condition": "1"
-        }, {
-            "verbose_name": "Pay",
-            "method": "POST",
-            "url": reverse("core:action", kwargs={"app": "service", "model": "operation"}),
-            "permission": "service.change_operation",
-            "limitation": {"status": VALIDATE},
-            "condition": "not request.user.is_staff",
-            "values": {"status": PAID},
-        }, {
-            "verbose_name": "Submit",
-            "method": "POST",
-            "url": reverse("core:action", kwargs={"app": "service", "model": "operation"}),
-            "permission": "service.change_operation",
-            "limitation": {"status": CREATED},
-            "values": {"status": SUBMITTED},
-            "condition": "not request.user.is_staff"
-        })
+                          "verbose_name": "Debit Note",
+                          "method": "GET",
+                          "url": reverse("core:document",
+                                         kwargs={"app": "service", "model": "operation", "template": "invoice"}),
+                          "permission": "service.view_operation",
+                          "limitation": {"status": VALIDATE},
+                          "condition": "1"
+                      }, {
+                          "verbose_name": "ATM",
+                          "method": "GET",
+                          "url": reverse("core:document",
+                                         kwargs={"app": "service", "model": "operation", "template": "atm"}),
+                          "permission": "service.view_operation",
+                          "limitation": {"status": COMPLETED},
+                          "condition": "1"
+                      }, {
+                          "verbose_name": "Checkpoint",
+                          "method": "GET",
+                          "url": reverse("core:list", kwargs={"app": "service", "model": "checkpoint"}),
+                          "permission": "service.view_checkpoint",
+                          "limitation": {"status": COMPLETED},
+                          "condition": "1"
+                      }, {
+                          "verbose_name": "Pay",
+                          "method": "POST",
+                          "url": reverse("core:action", kwargs={"app": "service", "model": "operation"}),
+                          "permission": "service.change_operation",
+                          "limitation": {"status": VALIDATE},
+                          "condition": "not request.user.is_staff",
+                          "values": {"status": PAID},
+                      }, {
+                          "verbose_name": "Submit",
+                          "method": "POST",
+                          "url": reverse("core:action", kwargs={"app": "service", "model": "operation"}),
+                          "permission": "service.change_operation",
+                          "limitation": {"status": CREATED},
+                          "values": {"status": SUBMITTED},
+                          "condition": "not request.user.is_staff"
+                      })
 
     list_actions = ({
-        "verbose_name": "Export",
-        "permission": "service.view_operation",
-        "url": reverse("core:export", kwargs={"app": "service", "model": "operation"})
-    },)
+                        "verbose_name": "Export",
+                        "permission": "service.view_operation",
+                        "url": reverse("core:export", kwargs={"app": "service", "model": "operation"})
+                    },)
 
     def total(self):
         qs = Product.objects.values('total').filter(operation=self)
@@ -275,13 +274,13 @@ class Product(models.Model):
     destination = models.CharField(_("Destination"), max_length=50, null=True, default=None)
 
     # Extra field of control
-    penalty = models.IntegerField(_("Penalty applied"), help_text=_("The penalty is applied in %"), default=0)
+    penalty = models.IntegerField(_("Penalty applied"), help_text=_("The penalty is applied in %"), null=True, default=0)
     total = MoneyField(verbose_name=_("Total($)"), max_digits=14, decimal_places=2, null=True, default=None,
                        default_currency='USD')
 
-    is_transshipped = models.BooleanField(_("Is transshipped"), default=False)
+    is_transshipped = models.BooleanField(_("Is transshipped"), null=True, default=False)
 
-    is_activated = models.BooleanField(_("Is activated"), help_text=_("This ATM is active"), default=True)
+    is_activated = models.BooleanField(_("Is activated"), null=True, help_text=_("This ATM is active"), default=True)
 
     updated_by = models.ForeignKey(User, related_name="product_updated_by", null=True, blank=True, default=None,
                                    on_delete=models.SET_NULL)
@@ -297,12 +296,12 @@ class Product(models.Model):
 
     extra = {
         "fields": ({
-            "condition": "request.user.is_superuser",
-            "name": "penalty"
-        }, {
-           "condition": "request.user.is_superuser",
-           "name": "is_activated"
-        })
+                       "condition": "request.user.is_superuser",
+                       "name": "penalty"
+                   }, {
+                       "condition": "request.user.is_superuser",
+                       "name": "is_activated"
+                   })
     }
 
     list_display_fields = ("id", "operation", "product_type", "quantity", "destination", "is_activated")
@@ -314,8 +313,6 @@ class Product(models.Model):
         verbose_name = _("Product/Cargo")
         verbose_name_plural = _("Product/Cargos")
 
-
-# -----------------------------------------------------------
 
 class CheckPoint(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default=None)

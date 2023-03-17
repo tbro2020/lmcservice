@@ -39,15 +39,6 @@ class User(AbstractUser):
            "name": "groups"
         })
     }
-    """
-    # User permissions removed
-    {
-       "condition": "request.user.is_staff",
-       "name": "user_permissions"
-    },
-    """
-
-    change_actions = ()
 
     def __str__(self):
         return self.email
@@ -125,9 +116,6 @@ class Unit(models.Model):
     name = models.CharField(_("name"), max_length=50)
     abbreviation = models.CharField(_("Abbreviation"), max_length=50)
 
-    updated = models.DateTimeField(_("Updated"), auto_now=True)
-    created = models.DateTimeField(_("Created"), auto_now_add=True)
-
     def __str__(self):
         return self.name
 
@@ -144,9 +132,6 @@ class ProductType(models.Model):
     fees_admin = MoneyField(verbose_name=_("Admin Fees($)"), max_digits=14, decimal_places=2, default_currency='USD')
 
     unit = models.ForeignKey(Unit, verbose_name=_("Unit"), on_delete=models.CASCADE)
-
-    updated = models.DateTimeField(_("Updated"), auto_now=True)
-    created = models.DateTimeField(_("Created"), auto_now_add=True)
 
     def __str__(self):
         return "({unit}) {name}".format(unit=self.unit.name, name=self.name)

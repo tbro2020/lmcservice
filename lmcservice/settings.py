@@ -169,20 +169,12 @@ if DEBUG:
     INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 
 # CACHE
-if DEBUG:
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
-            'LOCATION': '127.0.0.1:11211',
-        }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': env.get_value("REDIS_URL", default='redis://127.0.0.1:6379'),
     }
-else:
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-            'LOCATION': env.get_value("REDIS_URL", default='redis://127.0.0.1:6379'),
-        }
-    }
+}
 
 CSRF_TRUSTED_ORIGINS = []  # ["https://c855-2c0f-e00-607-a300-31f9-b0c8-8e6c-4ad9.eu.ngrok.io"]
 
@@ -198,7 +190,7 @@ if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
-os.environ['PATH'] += os.pathsep + os.path.dirname(sys.executable)
-WKHTMLTOPDF_CMD = subprocess.Popen(['which', os.environ.get('WKHTMLTOPDF_BINARY', 'wkhtmltopdf')],
-                                   stdout=subprocess.PIPE).communicate()[0].strip()
-PDFKIT_CONFIG = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_CMD)
+# os.environ['PATH'] += os.pathsep + os.path.dirname(sys.executable)
+# WKHTMLTOPDF_CMD = subprocess.Popen(['which', os.environ.get('WKHTMLTOPDF_BINARY', 'wkhtmltopdf')],
+#                                   stdout=subprocess.PIPE).communicate()[0].strip()
+# PDFKIT_CONFIG = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_CMD)

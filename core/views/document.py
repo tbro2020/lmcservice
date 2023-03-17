@@ -23,17 +23,18 @@ class Document(LoginRequiredMixin, PermissionRequiredMixin, View):
             data = getattr(model, "inline_model_form", {})
             qs = apps.get_model(app_label=data.get("app_label"), model_name=data.get("model_name")) \
                 .objects.filter(**{model._meta.model_name: obj.id})
-        if output == "html":
-            return render(request, f"document/{template}.html", locals())
+        # if output == "html":
+        #    return render(request, f"document/{template}.html", locals())
 
-        template = get_template(f"document/{template}.html")
-        html = template.render(locals())
+        # template = get_template(f"document/{template}.html")
+        # html = template.render(locals())
 
-        pdf = pdfkit.from_string(html, False, options={"page-size": "a4",
-                                                       'encoding': "UTF-8", 'no-outline': None,
-                                                       "enable-local-file-access": False},
-                                 configuration=settings.PDFKIT_CONFIG)
-        response = HttpResponse(pdf, content_type='application/pdf')
+        # pdf = pdfkit.from_string(html, False, options={"page-size": "a4",
+        #                                               'encoding': "UTF-8", 'no-outline': None,
+        #                                                "enable-local-file-access": False},
+        #                          configuration=settings.PDFKIT_CONFIG)
+        # response = HttpResponse(pdf, content_type='application/pdf')
 
-        response['Content-Disposition'] = f'filename="{template}-#{obj.id}.pdf"'
-        return response
+        # response['Content-Disposition'] = f'filename="{template}-#{obj.id}.pdf"'
+        # return response
+        return render(request, f"document/{template}.html", locals())
