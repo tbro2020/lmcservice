@@ -10,10 +10,6 @@ from core.utils import modelform_factory_data
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from core.models import User
-from service.models import Operation
-
-
 class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def get_permission_required(self):
@@ -53,12 +49,12 @@ class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         obj = form.save(commit=False)
 
-        if isinstance(obj, Operation): obj.created_by = request.user
-        if isinstance(obj, User): obj.company = request.user.company
+        if isinstance(obj, apps.get_model("service", "operation")): obj.created_by = request.user
+        if isinstance(obj, apps.get_model("core", "user")): obj.company = request.user.company
         obj.save()
 
         # Inherent permission
-        if isinstance(obj, User): obj.groups.add(*list(request.user.groups.all()))
+        if isinstance(obj, apps.get_model("core", "user")): obj.groups.add(*list(request.user.groups.all()))
 
         if hasattr(model, "inline_model_form"):
             inlines = inlineformset.save(commit=False)

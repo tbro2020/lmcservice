@@ -11,8 +11,6 @@ from django.forms.fields import TypedChoiceField
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from service.models import Operation
-
 
 def modelAndFields(request, model):
     inline = getattr(model, "inline_model_form")
@@ -94,7 +92,7 @@ class Edit(LoginRequiredMixin, PermissionRequiredMixin, View):
             return render(request, f"core/update.html", locals())
 
         obj = form.save(commit=True)
-        if isinstance(obj, Operation): obj.updated_by = request.user
+        if isinstance(obj, apps.get_model("service", "operation")): obj.updated_by = request.user
 
         obj.save()
         if hasattr(locals(), "inlineformset"): inlineformset.save()
