@@ -34,14 +34,18 @@ class User(AbstractUser):
         }, {
            "condition": "request.user.is_staff",
            "name": "is_superuser"
-        }, {
-           "condition": "request.user.is_staff",
-           "name": "user_permissions"
-        }, {
+        },  {
            "condition": "request.user.is_staff",
            "name": "groups"
         })
     }
+    """
+    # User permissions removed
+    {
+       "condition": "request.user.is_staff",
+       "name": "user_permissions"
+    },
+    """
 
     change_actions = ()
 
