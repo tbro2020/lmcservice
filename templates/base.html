@@ -6,6 +6,7 @@
 
 {% load core %}
 
+{% cache 300 navbar request.user.email request.path %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -138,7 +139,6 @@
     <div class="container-fluid">
       <div class="row">
 
-        {% cache 300 navbar request.user.email request.path %}
             <nav class="col-md-2 d-none d-md-block bg-dark text-light sidebar">
           <div class="sidebar-sticky">
 
@@ -203,7 +203,7 @@
             </ul>
           </div>
         </nav>
-        {% endcache %}
+{% endcache %}
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             {% if messages %}
@@ -221,9 +221,6 @@
 
       </div>
     </div>
-
-    <script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
-    <script>feather.replace()</script>
 
     <script>
         $(document).ready(function() {
