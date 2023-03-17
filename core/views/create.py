@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 from core.models import User
+from service.models import Company, Operation
 
 
 class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -52,9 +53,8 @@ class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         obj = form.save(commit=False)
 
-        fields = [field.name for field in model._meta.fields]
-        if "created_by" in fields: obj.created_by = request.user
-        if "company" in fields: obj.company = request.user.company
+        if isinstance(obj, Operation): obj.created_by = request.user
+        if isinstance(obj, User): obj.company = request.user.company
         obj.save()
 
         # Inherent permission
