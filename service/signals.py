@@ -10,11 +10,16 @@ from service import task
 from datetime import date
 
 
+@receiver(pre_save, sender=Operation)
+def pre_operation(sender, instance, raw, using, update_fields, **kwargs):
+    return # make sure the operation is paid using wallet and user wallet has enough found
+
+
 @receiver(pre_save, sender=Product)
 def pre_product(sender, instance, raw, using, update_fields, **kwargs):
+    if instance.penalty <= 0: return
     total = instance.product_type.fees * instance.quantity
-    if instance.penalty > 0:
-        total = total + (total * (instance.penalty / 100))
+    total = total + (total * (instance.penalty / 100))
     instance.total = total
 
 
