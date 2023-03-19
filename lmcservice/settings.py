@@ -150,7 +150,7 @@ if not DEBUG:
     STATIC_URL = 'static/'
 else:
     AWS_DEFAULT_ACL = 'public-read'
-    AWS_S3_REGION = env('AWS_S3_REGION')
+    # AWS_S3_REGION = env('AWS_S3_REGION')
     AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
     AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL")
     AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
