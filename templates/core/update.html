@@ -75,7 +75,7 @@
     </div>
 
     <div class="mb-5">
-        <form method="post" id="form-container">
+        <form method="post" id="form-container" enctype="multipart/form-data">
             {% csrf_token %}
 
             {{ form.non_form_errors }}

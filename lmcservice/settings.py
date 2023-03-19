@@ -112,7 +112,7 @@ if DEBUG:
     }
 else:
     DATABASES = {
-        'default': dj_database_url.config(default=env('DATABASE_URL'), conn_max_age=600, conn_health_checks=True, )}
+        'default': dj_database_url.config(default=env('DO_DATABASE_URL'), conn_max_age=600, conn_health_checks=True, )}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -164,7 +164,7 @@ else:
 
     # public media settings
     PUBLIC_MEDIA_LOCATION = 'media'
-    DEFAULT_FILE_STORAGE = 'lmc.storage.PublicMediaStorage'
+    DEFAULT_FILE_STORAGE = 'lmcservice.storage.PublicMediaStorage'
     MEDIA_URL = f'https://{AWS_S3_ENDPOINT_URL}/{PUBLIC_MEDIA_LOCATION}/'
 
     STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)

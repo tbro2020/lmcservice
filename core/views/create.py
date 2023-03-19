@@ -34,7 +34,7 @@ class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
         model = apps.get_model(app, model)
 
         data = modelform_factory_data(model)
-        form = modelform_factory(model, **data)(request.POST or None, request.FILES or None)
+        form = modelform_factory(model, **data)(request.POST, request.FILES)
 
         inlineformset = None
         if hasattr(model, "inline_model_form"):
@@ -42,13 +42,12 @@ class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
             _model = apps.get_model(app_label=inline.get("app_label"), model_name=inline.get("model_name"))
             _fields = _model.form_fields if hasattr(_model, "form_fields") else "__all__"
             inlineformset = inlineformset_factory(model, _model, form=modelform_factory(_model, fields=_fields))
-            inlineformset = inlineformset(request.POST)
+            inlineformset = inlineformset(request.POST, request.FILES)
 
         if not form.is_valid() or (inlineformset and not inlineformset.is_valid()):
             return render(request, f"core/create.html", locals())
 
         obj = form.save(commit=False)
-
         if isinstance(obj, apps.get_model("service", "operation")):
             obj.created_by = request.user
             obj.company = request.user.company

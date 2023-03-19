@@ -11,5 +11,5 @@ def post_save_transaction(sender, instance, created, **kwargs):
 
 
 @receiver(post_delete, sender=Transaction)
-def post_delete_transaction(sender, instance, using):
+def post_delete_transaction(sender, instance, using,  **kwargs):
     tasks.solde.delay(instance.company_id)
