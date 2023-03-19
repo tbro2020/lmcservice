@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 import os
+import sys
 import platform
 import subprocess
-import sys
+
 from pathlib import Path
+from django.contrib.messages import constants as messages
 
 import dj_database_url
 import environ
@@ -55,7 +57,8 @@ INSTALLED_APPS = [
     'django_filters',
 
     'core',
-    'service'
+    'service',
+    'wallet'
 ]
 
 if DEBUG: INSTALLED_APPS.append("debug_toolbar")
@@ -141,7 +144,28 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+if DEBUG:
+    STATIC_URL = 'static/'
+else:
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_REGION = env('AWS_S3_REGION')
+    AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
+    AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL")
+    AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+
+    # static settings
+    AWS_LOCATION = ''
+    STATIC_URL = f'https://{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}/'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+    # public media settings
+    PUBLIC_MEDIA_LOCATION = 'media'
+    DEFAULT_FILE_STORAGE = 'lmc.storage.PublicMediaStorage'
+    MEDIA_URL = f'https://{AWS_S3_ENDPOINT_URL}/{PUBLIC_MEDIA_LOCATION}/'
+
+    STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -179,18 +203,60 @@ CACHES = {
 CSRF_TRUSTED_ORIGINS = []  # ["https://c855-2c0f-e00-607-a300-31f9-b0c8-8e6c-4ad9.eu.ngrok.io"]
 
 # CELERY related settings
-CELERY_BROKER_URL = env('REDIS_URL')
-CELERY_RESULT_BACKEND = env('REDIS_URL')
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = TIME_ZONE
+if DEBUG:
+    CELERY_BROKER_URL = "redis://127.0.0.1:6379"
+    CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379"
+    CELERY_ACCEPT_CONTENT = ['application/json']
+    CELERY_TASK_SERIALIZER = 'json'
+    CELERY_RESULT_SERIALIZER = 'json'
+    CELERY_TIMEZONE = TIME_ZONE
+else:
+    CELERY_BROKER_URL = env('REDIS_URL')
+    CELERY_RESULT_BACKEND = env('REDIS_URL')
+    CELERY_ACCEPT_CONTENT = ['application/json']
+    CELERY_TASK_SERIALIZER = 'json'
+    CELERY_RESULT_SERIALIZER = 'json'
+    CELERY_TIMEZONE = TIME_ZONE
 
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_HOST = env("EMAIL_HOST")
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = env("EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
+    EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
 
+    # DEFAULT EMAIL
+    DEFAULT_FROM_EMAIL = "noreply@lmc-rdc.com"
+    ADMIN_EMAIL = "christian@tabaro.me"
 
-# os.environ['PATH'] += os.pathsep + os.path.dirname(sys.executable)
-# WKHTMLTOPDF_CMD = subprocess.Popen(['which', os.environ.get('WKHTMLTOPDF_BINARY', 'wkhtmltopdf')],
-#                                   stdout=subprocess.PIPE).communicate()[0].strip()
-# PDFKIT_CONFIG = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_CMD)
+# Minifying
+if not DEBUG:
+    HTML_MINIFY = True
+    KEEP_COMMENTS_ON_MINIFYING = True
+    COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Security
+if not DEBUG:
+    CSRF_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_PRELOAD = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+    X_FRAME_OPTIONS = 'DENY'
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'secondary debug',
+    messages.INFO: 'info info',
+    messages.SUCCESS: 'success success',
+    messages.WARNING: 'warning warning',
+    messages.ERROR: 'danger error'
+}

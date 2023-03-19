@@ -1,12 +1,10 @@
 {% load i18n %}
-{% load cache %}
 {% load static %}
 {% load crispy_forms_tags %}
 {% get_current_language as LANGUAGE_CODE %}
 
 {% load core %}
 
-{% cache 300 header %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -134,22 +132,22 @@
         .border-bottom { border-bottom: 1px solid #e5e5e5; }
     </style>
 </head>
-{% endcache %}
 
 <body>
     <div class="container-fluid">
       <div class="row">
-
-        {% cache 300 navbar request.user.email request.path %}
             <nav class="col-md-2 d-none d-md-block bg-dark text-light sidebar">
       <div class="sidebar-sticky">
 
         <div class="col text-center mt-1 mb-1">
-            <img width="64" src="https://fra1.digitaloceanspaces.com/lmc-storage/image/logo.png?AWSAccessKeyId=62E43JZSJLD4WY257YQJ&Signature=Y3VCMXzD7KMH8g4T0VvtBiAR4%2Fc%3D&Expires=1678746430" class="img-fluid" />
+            <img width="64" src="{% static 'image/logo.png' %}" class="img-fluid" />
         </div>
 
         {% if request.user.company %}
             <h4 class="text-center">{{ request.user.company.name }}</h4>
+            <h6 class="text-center">
+                <small>{% trans "Hey!" %} <br /> {{ request.user.get_full_name|default:request.user.email }}</small>
+            </h6>
             {% else %}
             <h4 class="text-center">
                 Lignes Maritimes Congolaises
@@ -158,7 +156,7 @@
                 {% endif %}
             </h4>
             <h6 class="text-center">
-                <small>{% trans "Hey!" %} {{ request.user.full_name|default:request.user.email }}</small>
+                <small>{% trans "Hey!" %} {{ request.user.get_full_name|default:request.user.email }}</small>
             </h6>
         {% endif %}
 
@@ -168,21 +166,16 @@
             <a class="nav-link text-light {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'core:home' %}">
               {% trans 'Home' %} <span class="sr-only">(current)</span>
                 {% if request.user.company %}
-                    <span class="badge badge-primary">[{{ request.user.company.solde }}]</span>
+                    <span class="badge badge-primary">[{{ request.user.company.balance }}]</span>
                 {% endif %}
+            </a>
+            <a class="nav-link text-capitalize text-warning" href="{% url 'password_reset' %}">
+                {% trans 'Reset password' %}<span class="sr-only">(current)</span>
             </a>
             <a class="nav-link text-capitalize text-danger" href="{% url 'logout' %}">
                 {% trans 'logout' %}<span class="sr-only">(current)</span>
             </a>
           </li>
-
-            {% comment %}
-            <li class="nav-item">
-                <a class="nav-link text-capitalize {% if request.resolver_match.kwargs.model == model.1 %}active{% endif %}" href="{% url 'core:list' model.0 model.1 %}">
-                  {{ key}} <span class="sr-only">(current)</span>
-                </a>
-            </li>
-            {% endcomment %}
 
           {% with request.user|models as apps %}
               {% for key, models in apps.items %}
@@ -194,7 +187,7 @@
                         {% for model in models %}
                             <li class="text-capitalize">
                                 <a class="nav-link text-capitalize {% if request.resolver_match.kwargs.model == model.name %}active{% else %}text-light{% endif %}" href="{% url 'core:list' key model.name %}">
-                                  {{ model.verbose}} <span class="sr-only">(current)</span>
+                                  {{ model.verbose }} <span class="sr-only">(current)</span>
                                 </a>
                             </li>
                         {% endfor %}
@@ -205,18 +198,18 @@
         </ul>
       </div>
     </nav>
-        {% endcache %}
 
         <main role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
             {% if messages %}
-            <div class="alert alert-success">
-                <ul class="messages mb-0 text-uppercase">
-                    {% for message in messages %}
-                        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <ul class="messages mb-0 text-uppercase">
+                            <li>{{ message|safe }}</li>
+                        </ul>
+                    </div>
+                {% endfor %}
             {% endif %}
+
             {% block content %}
             {% endblock content %}
         </main>

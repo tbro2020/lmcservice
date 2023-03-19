@@ -22,8 +22,24 @@ class Action(LoginRequiredMixin, PermissionRequiredMixin, View):
         del data["csrfmiddlewaretoken"]
 
         qs = model.objects.filter(**request.GET.dict())
+        if not qs.exists():
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+        print(qs.last().cost)
+
+        # Apply prerequisite if exist
+        actions = [action for action in model.change_actions
+                   if action.get("url") == reverse("core:action", kwargs={"app": app, "model": model._meta.model_name})]
+        actions = actions[0]
+
+        if actions.get("prerequisite", False):
+            prerequisite = actions.get("prerequisite")
+            if not eval(prerequisite.get("condition", "False")):
+                messages.error(request, prerequisite.get("message", {}).get("error", "We fail this action"))
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+            eval(prerequisite.get("action", "False"))
+            
         qs.update(**data)
-        if qs.exists():
-            post_save.send(model, instance=qs.last(), created=False)
+        post_save.send(model, instance=qs.last(), created=False)
         messages.success(request, "Action updated successfully")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

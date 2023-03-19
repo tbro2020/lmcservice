@@ -58,7 +58,7 @@ class Edit(LoginRequiredMixin, PermissionRequiredMixin, View):
         if hasattr(model, "inline_model_form"):
             inline = modelAndFields(request, model)
             inlineformset = inlineformset_factory(model, inline[0], form=modelform_factory(inline[0], fields=inline[1]),
-                                                  extra=0, can_delete=True)(instance=obj)
+                                                  extra=1, can_delete=True)(instance=obj)
 
         return render(request, f"core/update.html", locals())
 
@@ -85,8 +85,9 @@ class Edit(LoginRequiredMixin, PermissionRequiredMixin, View):
         if hasattr(model, "inline_model_form"):
             inline = modelAndFields(request, model)
             inlineformset = inlineformset_factory(model, inline[0], form=modelform_factory(inline[0], fields=inline[1])
-                                                  , can_delete=True)(request.POST or None, request.FILES or None,
-                                                                     instance=obj)
+                                                  , extra=1, can_delete=True)(request.POST or None,
+                                                                              request.FILES or None,
+                                                                              instance=obj)
 
         if not form.is_valid() or (hasattr(locals(), "inlineformset") and not inlineformset.is_valid()):
             return render(request, f"core/update.html", locals())
@@ -95,6 +96,6 @@ class Edit(LoginRequiredMixin, PermissionRequiredMixin, View):
         if isinstance(obj, apps.get_model("service", "operation")): obj.updated_by = request.user
 
         obj.save()
-        if hasattr(locals(), "inlineformset"): inlineformset.save()
+        if hasattr(model, "inline_model_form"): inlineformset.save()
         messages.success(request, f"{model._meta.verbose_name} {getattr(obj, 'status', '')} updated successfully")
         return redirect(reverse('core:edit', kwargs={"app": app, "model": model._meta.model_name, "pk": pk}))

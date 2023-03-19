@@ -3,8 +3,8 @@ from django.utils.translation import gettext as _
 from django.db import models
 
 from djmoney.models.fields import MoneyField
-from core.manager import UserManager
 from core.utils import default_limitation
+from core.manager import UserManager
 
 
 class User(AbstractUser):

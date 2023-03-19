@@ -49,7 +49,9 @@ class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         obj = form.save(commit=False)
 
-        if isinstance(obj, apps.get_model("service", "operation")): obj.created_by = request.user
+        if isinstance(obj, apps.get_model("service", "operation")):
+            obj.created_by = request.user
+            obj.company = request.user.company
         if isinstance(obj, apps.get_model("core", "user")): obj.company = request.user.company
         obj.save()
 

@@ -21,17 +21,17 @@ class List(LoginRequiredMixin, PermissionRequiredMixin, View):
         return f"{data.get('app')}.view_{data.get('model')}",
 
     def get(self, request, app, model):
-        data = request.GET.dict()
+        query = request.GET.dict()
         model = apps.get_model(app, model)
         field_names = [field.name for field in model._meta.get_fields()]
-        data = {key: value for key, value in data.items() if key in field_names and value}
+        query = {key: value for key, value in query.items() if key in field_names and value}
 
         fields = [field for field in model._meta.fields if field.name in model.list_display_fields] if \
             hasattr(model, "list_display_fields") else \
             [field for field in model._meta.fields if field.get_internal_type() == 'CharField' or field.name == 'id']
 
         # apply filter according to the office or user limitation info to view
-        qs = model.objects.values(*[field.name for field in fields]).filter(**data)
+        qs = model.objects.values(*[field.name for field in fields]).filter(**query)
         if not request.user.is_superuser and request.user.office is not None and request.user.is_staff:
             qs = qs.filter(**request.user.office.limitation.get("field", {}).get(model._meta.model_name, {}))
 

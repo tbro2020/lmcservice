@@ -187,69 +187,80 @@ class Operation(models.Model):
     filter_fields = ("transport", "status", "load_point", "entry_point", "exit_point", "updated", "created")
 
     editable_if = "(not request.user.is_staff and obj.status == 'CREATED') or (request.user.is_staff) or (" \
-                  "request.user.is_superadmin)"
+                  "request.user.is_superuser)"
 
     extra = {
         "fields": ({
-                       "condition": "request.user.is_staff",
-                       "name": "status"
-                   },)
+           "condition": "request.user.is_staff",
+           "name": "status"
+        },)
     }
 
-    list_export_fields = ("id", "company", "status", "cost", "payment_method")
+    list_export_fields = ("id", "company", "status", "cost", "payment_method", "created")
     list_display_fields = ("id", "company", "status", "cost", "payment_method")
     inline_model_form = {"app_label": "service", "model_name": "Product"}
 
     change_actions = ({
-                          "verbose_name": "Debit Note",
-                          "method": "GET",
-                          "url": reverse("core:document",
-                                         kwargs={"app": "service", "model": "operation", "template": "invoice"}),
-                          "permission": "service.view_operation",
-                          "limitation": {"status": VALIDATE},
-                          "condition": "1"
-                      }, {
-                          "verbose_name": "ATM",
-                          "method": "GET",
-                          "url": reverse("core:document",
-                                         kwargs={"app": "service", "model": "operation", "template": "atm"}),
-                          "permission": "service.view_operation",
-                          "limitation": {"status": COMPLETED},
-                          "condition": "1"
-                      }, {
-                          "verbose_name": "Checkpoint",
-                          "method": "GET",
-                          "url": reverse("core:list", kwargs={"app": "service", "model": "checkpoint"}),
-                          "permission": "service.view_checkpoint",
-                          "limitation": {"status": COMPLETED},
-                          "condition": "1"
-                      }, {
-                          "verbose_name": "Pay",
-                          "method": "POST",
-                          "url": reverse("core:action", kwargs={"app": "service", "model": "operation"}),
-                          "permission": "service.change_operation",
-                          "limitation": {"status": VALIDATE},
-                          "condition": "not request.user.is_staff",
-                          "values": {"status": PAID},
-                      }, {
-                          "verbose_name": "Submit",
-                          "method": "POST",
-                          "url": reverse("core:action", kwargs={"app": "service", "model": "operation"}),
-                          "permission": "service.change_operation",
-                          "limitation": {"status": CREATED},
-                          "values": {"status": SUBMITTED},
-                          "condition": "not request.user.is_staff"
-                      })
+          "verbose_name": "Debit Note",
+          "method": "GET",
+          "url": reverse("core:document",
+                         kwargs={"app": "service", "model": "operation", "template": "invoice"}),
+          "permission": "service.view_operation",
+          "limitation": {"status": VALIDATE},
+          "condition": "1"
+      }, {
+          "verbose_name": "ATM",
+          "method": "GET",
+          "url": reverse("core:document",
+                         kwargs={"app": "service", "model": "operation", "template": "atm"}),
+          "permission": "service.view_operation",
+          "limitation": {"status": COMPLETED},
+          "condition": "1"
+      }, {
+          "verbose_name": "Checkpoint",
+          "method": "GET",
+          "url": reverse("core:list", kwargs={"app": "service", "model": "checkpoint"}),
+          "permission": "service.view_checkpoint",
+          "limitation": {"status": COMPLETED},
+          "condition": "1"
+      }, {
+        "verbose_name": "Pay",
+        "method": "POST",
+        "url": reverse("core:action", kwargs={"app": "service", "model": "operation"}),
+        "permission": "service.change_operation",
+        "limitation": {"status": VALIDATE},
+        "condition": "not request.user.is_staff",
+        "values": {"status": PAID},
+        "prerequisite": {
+            "condition": "apps.get_model('wallet', 'transaction').objects.filter(company=qs.last().company, "
+                         "status='PAID').balance() > qs.last().cost.amount",
+            "action": "apps.get_model('wallet', 'transaction').debit(qs.last())",
+            "message": {
+                "error": "We fail to debit your account",
+                "success": "Your account has been debited with success"
+            }
+        }
+      }, {
+          "verbose_name": "Submit",
+          "method": "POST",
+          "url": reverse("core:action", kwargs={"app": "service", "model": "operation"}),
+          "permission": "service.change_operation",
+          "limitation": {"status": CREATED},
+          "values": {"status": SUBMITTED},
+          "condition": "not request.user.is_staff"
+    })
 
     list_actions = ({
-                        "verbose_name": "Export",
-                        "permission": "service.view_operation",
-                        "url": reverse("core:export", kwargs={"app": "service", "model": "operation"})
-                    },)
+        "verbose_name": "Export",
+        "permission": "service.view_operation",
+        "url": reverse("core:export", kwargs={"app": "service", "model": "operation"})
+    },)
 
     def total(self):
         qs = Product.objects.values('total').filter(operation=self)
-        return qs.aggregate(Sum('total')).get('total__sum', 0)
+        _total = qs.aggregate(Sum('total')).get('total__sum', 0)
+        if _total is None: return 0
+        return _total
 
     class Meta:
         verbose_name = _("Operation")

@@ -5,19 +5,13 @@ from django.dispatch import receiver
 from django.contrib.auth.models import Group, Permission
 
 from service.models import *
-from service import task
+from service import tasks
 
 from datetime import date
 
 
-@receiver(pre_save, sender=Operation)
-def pre_operation(sender, instance, raw, using, update_fields, **kwargs):
-    return # make sure the operation is paid using wallet and user wallet has enough found
-
-
 @receiver(pre_save, sender=Product)
 def pre_product(sender, instance, raw, using, update_fields, **kwargs):
-    if instance.penalty <= 0: return
     total = instance.product_type.fees * instance.quantity
     total = total + (total * (instance.penalty / 100))
     instance.total = total
@@ -25,14 +19,14 @@ def pre_product(sender, instance, raw, using, update_fields, **kwargs):
 
 @receiver(post_save, sender=Product)
 def post_product(sender, instance, created, **kwargs):
-    task.operation.delay(instance.operation_id)
+    tasks.operation.delay(instance.operation_id)
 
 
 @receiver(post_save, sender=Company)
 def post_company(sender, instance, created, **kwargs):
     model = instance._meta
     if created:
-        task.mailer.delay(model.app_label, model.model_name, instance.id,
+        tasks.mailer.delay(model.app_label, model.model_name, instance.id,
                           "email/company/welcome.html", _("Thank you for your registration"),
                           instance.email)
         return

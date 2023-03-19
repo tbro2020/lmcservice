@@ -1,0 +1,29 @@
+{% load i18n %}
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% trans "Report ready" %}</title>
+</head>
+<body>
+    <center><img src="{% static "logo.png" %}" alt="lmc-logo" width="128"></center>
+    <center>
+        <h1>Ligne Maritimes Congolaise</h1>
+        <h3>{% trans "Armement National" %}</h3>
+        <hr>
+    </center>
+    <h4>{% trans "Hello" %}!</h4>
+    <p>
+        {% trans "As requested from the platform, please find below the download link of the report" %}
+        <a href="{{ report.url }}" target="_blank">{{ report.url }}</a>
+        <small>{% trans "The report is available during 72 Hours in the server, after that time the above link will be disable" %}</small>
+    </p>
+    <br>
+    <p>{% trans "Cordially" %}</p>
+    <p>LMC Service.</p>
+</body>
+</html>
