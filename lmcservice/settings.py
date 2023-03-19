@@ -146,11 +146,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-if not DEBUG:
+if DEBUG:
     STATIC_URL = 'static/'
 else:
     AWS_DEFAULT_ACL = 'public-read'
-    AWS_S3_REGION = env('AWS_S3_REGION')
+    AWS_S3_REGION = env("AWS_S3_REGION")
     AWS_ACCESS_KEY_ID = env("AWS_ACCESS_KEY_ID")
     AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL")
     AWS_SECRET_ACCESS_KEY = env("AWS_SECRET_ACCESS_KEY")
