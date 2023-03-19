@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="container">
+    <h1>Operation #{{ checkpoint.operation.id }}</h1>
+    <small>Verified by <b class="text-warning">{{ checkpoint.user.get_full_name|default:checkpoint.user.email }}</b> at <i>{{ checkpoint.created }}</i></small>
+    <hr>
+    <dl class="row">
+        <dt class="col-sm-3">{% trans "Operation TYPE" %}</dt>
+        <dd class="col-sm-9">{{ checkpoint.operation.operation_type }}</dd>
+
+        <dt class="col-sm-3">{% trans "Transport" %}</dt>
+        <dd class="col-sm-9">{{ checkpoint.operation.transport }}</dd>
+
+        <dt class="col-sm-3">{% trans "Company" %}</dt>
+        <dd class="col-sm-9">{{ checkpoint.operation.company }}</dd>
+
+        <hr>
+
+        <dt class="col-sm-3">{% trans "Shipowner" %}</dt>
+        <dd class="col-sm-9">{{ checkpoint.operation.shipowner }}</dd>
+
+        <dt class="col-sm-3">{% trans "Forwarder" %}</dt>
+        <dd class="col-sm-9">{{ checkpoint.operation.forwarder }}</dd>
+
+        <dt class="col-sm-3">{% trans "Ship name" %}</dt>
+        <dd class="col-sm-9">{{ checkpoint.operation.ship_name }}</dd>
+
+        <dt class="col-sm-3">Voyage N°</dt>
+        <dd class="col-sm-9">{{ checkpoint.operation.trip_nber }}</dd>
+
+        <hr>
+
+        <dt class="col-sm-3">{% trans "Entry point" %}</dt>
+        <dd class="col-sm-9">{{ checkpoint.operation.entry_point }}</dd>
+
+        <dt class="col-sm-3">{% trans "Loading point" %}</dt>
+        <dd class="col-sm-9">{{ checkpoint.operation.load_point }}</dd>
+
+        <dt class="col-sm-3">{% trans "Discharge point" %}</dt>
+        <dd class="col-sm-9">{{ checkpoint.operation.unload_point }}</dd>
+
+        <dt class="col-sm-3">{% trans "Exit point" %}</dt>
+        <dd class="col-sm-9">{{ checkpoint.operation.exit_point }}</dd>
+
+        <dt class="col-sm-3">{% trans "Final Destination" %}</dt>
+        <dd class="col-sm-9">{{ checkpoint.operation.end_point }}</dd>
+        <hr>
+        <dt class="col-sm-3">{% trans "Status" %}</dt>
+        <dd class="col-sm-9">{{ checkpoint.operation.status }}</dd>
+        <hr>
+        <dt class="col-sm-3">{% trans "Created" %}</dt>
+        <dd class="col-sm-9">{{ checkpoint.operation.created }}</dd>
+    </dl>
+    <hr>
+    <h2>Product/Cargo({{ products|length }})</h2>
+    <div class="col">
+        <div class="accordion" id="accordionExample">
+            {% for product in products %}
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingOne-{{ product.id }}">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne{{ product.id }}" aria-expanded="true" aria-controls="collapseOne{{ product.id }}">
+                    Product/Cargo #{{ product.id }}
+                </button>
+                </h2>
+                <div id="collapseOne{{ product.id }}" class="accordion-collapse collapse text-dark show" aria-labelledby="headingOne-{{ product.id }}" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <dl class="row">
+                            {% if operation.operation_type == "Exportation" %}
+                            <dt class="col-sm-3">Product's nature</dt>
+                            <dd class="col-sm-9">{{ product.name }}</dd>
+                            {% endif %}
+                            <dt class="col-sm-3">Quantity</dt>
+                            <dd class="col-sm-9">{{ product.quantity }} {{ product.product_type.unit.name }}</dd>
+
+                            <dt class="col-sm-3">Ref. Lot</dt>
+                            <dd class="col-sm-9">{{ product.ref }}</dd>
+
+                            <dt class="col-sm-3">Truck</dt>
+                            <dd class="col-sm-9">{{ product.truck }}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

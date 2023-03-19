@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django_json_widget',
     'django_filters',
     'djcelery_email',
+    'rest_framework',
 
     'core',
     'service',

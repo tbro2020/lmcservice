@@ -26,6 +26,7 @@ django-phonenumbers==1.0.1
 django-redis-cache==3.0.1
 django-storages==1.13.2
 django_debug_toolbar==3.8.1
+djangorestframework==3.14.0
 environ==1.0
 future==0.18.3
 gunicorn==20.1.0
