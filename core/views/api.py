@@ -2,11 +2,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.views import View
 
+from django.apps import apps
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
 
-from service.models import Operation, Product, CheckPoint
 
+Operation = apps.get_model("service", "operation")
+Product = apps.get_model("service", "product")
+CheckPoint = apps.get_model("service", "checkpoint")
 
 class OperationAPIView(APIView):
     def post(self, request):
