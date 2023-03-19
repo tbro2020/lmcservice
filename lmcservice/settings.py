@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap4',
     'django_json_widget',
     'django_filters',
+    'djcelery_email',
 
     'core',
     'service',
