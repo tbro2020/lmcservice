@@ -146,7 +146,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-if DEBUG:
+if not DEBUG:
     STATIC_URL = 'static/'
 else:
     AWS_DEFAULT_ACL = 'public-read'
