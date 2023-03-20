@@ -48,7 +48,8 @@ class List(LoginRequiredMixin, PermissionRequiredMixin, View):
             qs = qs.filter(reduce(operator.or_, q))
 
         if hasattr(model, "filter_fields"):
-            qs = filterset_factory(model, getattr(model, "filter_fields", []))(request.GET, queryset=qs).qs
+            filter = filterset_factory(model, getattr(model, "filter_fields", []))(request.GET, queryset=qs)
+            qs = filter.qs
 
         qs = qs.order_by("-id")
         qs = Paginator(qs, 30).page(request.GET.get('page', 1))
