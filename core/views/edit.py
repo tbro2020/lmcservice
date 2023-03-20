@@ -51,7 +51,7 @@ class Edit(LoginRequiredMixin, PermissionRequiredMixin, View):
         if request.user.is_staff and request.user.office \
                 and request.user.office.limitation.get("value", {}).get(model._meta.model_name, False):
             for key, value in request.user.office.limitation.get("value", {}).get(model._meta.model_name, {}).items():
-                if key not in form.fields: continue
+                if key not in form.fields or value is None: continue
                 if not isinstance(form.fields[key], TypedChoiceField): continue
                 form.fields[key].choices = [choice for choice in form.fields[key].choices if choice[0] in value]
 
