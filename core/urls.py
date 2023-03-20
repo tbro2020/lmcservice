@@ -25,10 +25,10 @@ urlpatterns = [
 
     path("", Home.as_view(), name="home"),
     path("list/<str:app>/<str:model>", List.as_view(), name="list"),
+    path("create/<str:app>/<str:model>", Create.as_view(), name="create"),
     path("edit/<str:app>/<str:model>/<int:pk>", Edit.as_view(), name="edit"),
     path("view/<str:app>/<str:model>/<int:pk>", Overview.as_view(), name="view"),
     path("delete/<str:app>/<str:model>/<int:pk>", Delete.as_view(), name="delete"),
-    path("create/<str:app>/<str:model>", cache_page(60*60)(Create.as_view()), name="create"),
 
     path("document/<str:app>/<str:model>/<str:template>", Document.as_view(), name="document"),
     path("action/<str:app>/<str:model>", Action.as_view(), name="action"),

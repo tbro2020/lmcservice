@@ -37,7 +37,7 @@ def post_company(sender, instance, created, **kwargs):
     if not instance.is_active: return
     user = User.objects.create_user(instance.email, password=f"Default@LMC-{date.today().year}",
                                     company=instance, is_active=True)
-    group, created = Group.objects.get_or_create(name="Forwarder")
+    group, created = Group.objects.get_or_create(name="P/Forwarder")
     if created:
         permissions = Permission.objects.filter(codename__in=["add_user", "view_user", "change_user", "delete_user",
                                                               "add_operation", "view_operation", "change_operation",
