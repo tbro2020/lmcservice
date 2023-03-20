@@ -33,7 +33,9 @@ class List(LoginRequiredMixin, PermissionRequiredMixin, View):
         # apply filter according to the office or user limitation info to view
         qs = model.objects.values(*[field.name for field in fields]).filter(**query)
         if not request.user.is_superuser and request.user.office is not None and request.user.is_staff:
-            qs = qs.filter(**request.user.office.limitation.get("field", {}).get(model._meta.model_name, {}))
+            _data = request.user.office.limitation.get("field", {}).get(model._meta.model_name, {})
+            _data = {key: value for key, value in _data.items() if value}
+            qs = qs.filter(**_data)
 
         try:
             if request.user.company and model._meta.get_field('company'):
