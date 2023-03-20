@@ -16,7 +16,7 @@ class Action(LoginRequiredMixin, PermissionRequiredMixin, View):
         data = self.kwargs
         return f"{data.get('app')}.change_{data.get('model')}",
 
-    def post(self, request, app, model):
+    def post(self, request, app, model, action):
         model = apps.get_model(app, model)
         data = request.POST.dict()
         del data["csrfmiddlewaretoken"]
@@ -25,11 +25,8 @@ class Action(LoginRequiredMixin, PermissionRequiredMixin, View):
         if not qs.exists():
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-        print(qs.last().cost)
-
         # Apply prerequisite if exist
-        actions = [action for action in model.change_actions
-                   if action.get("url") == reverse("core:action", kwargs={"app": app, "model": model._meta.model_name})]
+        actions = [action for action in model.change_actions if action.get("verbose_name") == action]
         actions = actions[0]
 
         if actions.get("prerequisite", False):

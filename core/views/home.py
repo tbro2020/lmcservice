@@ -12,6 +12,8 @@ class Home(LoginRequiredMixin, View):
 
         # case of staff
         if request.user.is_staff and request.user.office is not None:
+            _data = request.user.office.limitation.get("field", {}).get(model._meta.model_name, {})
+            _data = {key: value for key, value in _data.items() if value}
             qs = qs.filter(**request.user.office.limitation.get("field", {}).get("operation", {}))
 
         # Case of forwarder user

@@ -224,9 +224,9 @@ class Operation(models.Model):
           "limitation": {"status": COMPLETED},
           "condition": "1"
       }, {
-        "verbose_name": "Pay with provision",
+        "verbose_name": "Pay",
         "method": "POST",
-        "url": reverse("core:action", kwargs={"app": "service", "model": "operation"}),
+        "url": reverse("core:action", kwargs={"app": "service", "model": "operation", "action": "Pay"}),
         "permission": "service.change_operation",
         "limitation": {"status": VALIDATE},
         "condition": "not request.user.is_staff",
@@ -243,7 +243,7 @@ class Operation(models.Model):
       }, {
           "verbose_name": "Submit",
           "method": "POST",
-          "url": reverse("core:action", kwargs={"app": "service", "model": "operation"}),
+          "url": reverse("core:action", kwargs={"app": "service", "model": "operation", "action": "Submit"}),
           "permission": "service.change_operation",
           "limitation": {"status": CREATED},
           "values": {"status": SUBMITTED},
