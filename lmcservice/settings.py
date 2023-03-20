@@ -112,9 +112,8 @@ if DEBUG:
     }
 else:
     DATABASES = {
-        'default': dj_database_url.config(env="DO_DATABASE_URL", conn_max_age=600, conn_health_checks=True, )}
-
-print(DATABASES)
+        'default': dj_database_url.config(env="DO_DATABASE_URL", conn_max_age=600, conn_health_checks=True, )
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -185,7 +184,7 @@ AUTH_USER_MODEL = 'core.User'
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = "login"
 LOGIN_REDIRECT_URL = "core:home"
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+# SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 # DEBUG TOOLBAR
 HOSTNAME = env.get_value("HOSTNAME", default="localhost:8000")

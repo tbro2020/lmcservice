@@ -224,13 +224,13 @@ class Operation(models.Model):
           "limitation": {"status": COMPLETED},
           "condition": "1"
       }, {
-        "verbose_name": "Pay",
+        "verbose_name": "Pay with provision",
         "method": "POST",
         "url": reverse("core:action", kwargs={"app": "service", "model": "operation"}),
         "permission": "service.change_operation",
         "limitation": {"status": VALIDATE},
         "condition": "not request.user.is_staff",
-        "values": {"status": PAID},
+        "values": {"status": PAID, "payment_method": WALLET},
         "prerequisite": {
             "condition": "apps.get_model('wallet', 'transaction').objects.filter(company=qs.last().company, "
                          "status='PAID').balance() > qs.last().cost.amount",

@@ -1,8 +1,7 @@
+from django.contrib.auth.models import Group, Permission
 from django.db.models.signals import pre_save, post_save
 from django.utils.translation import gettext_lazy as _
 from django.dispatch import receiver
-
-from django.contrib.auth.models import Group, Permission
 
 from service.models import *
 from service import tasks
