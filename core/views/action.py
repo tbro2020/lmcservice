@@ -25,7 +25,6 @@ class Action(LoginRequiredMixin, PermissionRequiredMixin, View):
         if not qs.exists():
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-        # Apply prerequisite if exist
         actions = [action for action in model.change_actions if action.get("verbose_name") == action]
         actions = actions[0]
 
