@@ -28,7 +28,7 @@ class Action(LoginRequiredMixin, PermissionRequiredMixin, View):
         actions = [action for action in model.change_actions if action.get("verbose_name") == action]
         actions = actions[0] if len(actions) > 0 else {}
 
-        if actions.get("prerequisite", False):
+        if actions.get("prerequisite", False) and action in ["Pay", "pay"]:
             prerequisite = actions.get("prerequisite")
             if not eval(prerequisite.get("condition", "False")):
                 messages.error(request, prerequisite.get("message", {}).get("error", "We fail this action"))
