@@ -24,7 +24,7 @@ class Action(LoginRequiredMixin, PermissionRequiredMixin, View):
         if not qs.exists():
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-        actions = [action for action in model.change_actions if action.get("prerequisite") == action]
+        actions = [action for action in model.change_actions if action.get("prerequisite")]
         actions = actions[0] if len(actions) > 0 else {}
 
         if actions.get("prerequisite", False) and action in ["Pay", "pay"]:
