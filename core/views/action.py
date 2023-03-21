@@ -26,7 +26,7 @@ class Action(LoginRequiredMixin, PermissionRequiredMixin, View):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
         actions = [action for action in model.change_actions if action.get("verbose_name") == action]
-        actions = actions[0]
+        actions = actions[0] if len(actions) > 0 else {}
 
         if actions.get("prerequisite", False):
             prerequisite = actions.get("prerequisite")
