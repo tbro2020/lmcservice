@@ -11,7 +11,6 @@ from service.models import *
 
 
 class Action(LoginRequiredMixin, PermissionRequiredMixin, View):
-
     def get_permission_required(self):
         data = self.kwargs
         return f"{data.get('app')}.change_{data.get('model')}",
@@ -25,7 +24,7 @@ class Action(LoginRequiredMixin, PermissionRequiredMixin, View):
         if not qs.exists():
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-        actions = [action for action in model.change_actions if action.get("verbose_name") == action]
+        actions = [action for action in model.change_actions if action.get("prerequisite") == action]
         actions = actions[0] if len(actions) > 0 else {}
 
         if actions.get("prerequisite", False) and action in ["Pay", "pay"]:
