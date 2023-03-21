@@ -37,7 +37,7 @@ def paid(pk):
     if ts.exists(): return
     obj, created = Transaction.objects.get_or_create(company=obj.company, amount=-1 * obj.cost,
                                                      description=f"Account debited of {obj.cost} for the payment of "
-                                                                 f"ATM #{obj.id}", method=Transaction.WALLET)
+                                                                 f"ATM #{obj.id}", status=Transaction.PAID, method=Transaction.WALLET)
     if created: print(f"Obj {obj.id} created")
 
 

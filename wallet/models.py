@@ -41,8 +41,9 @@ class Transaction(models.Model):
     @staticmethod
     def debit(obj):
         obj, created = Transaction.objects\
-            .get_or_create(company=obj.company, amount=-1 * obj.cost, description=f"Account debited of {obj.cost} "
-                                                                                  f"for the payment of ATM #{obj.id}")
+            .get_or_create(company=obj.company, amount=-1 * obj.cost,
+                           status=Transaction.PAID, method=Transaction.WALLET,
+                           description=f"Account debited of {obj.cost} for the payment of ATM #{obj.id}")
         return obj
 
     class Meta:
