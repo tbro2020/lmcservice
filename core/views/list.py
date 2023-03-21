@@ -31,10 +31,10 @@ class List(LoginRequiredMixin, PermissionRequiredMixin, View):
         #    [field for field in model._meta.fields if field.get_internal_type() == 'CharField' or field.name == 'id']
 
         fields = model.list_display_fields if hasattr(model, "list_display_fields") else \
-                 [field for field in model._meta.fields if field.get_internal_type() == 'CharField' or field.name == 'id']
+                 [field.name for field in model._meta.fields if field.get_internal_type() == 'CharField' or field.name == 'id']
 
         # apply filter according to the office or user limitation info to view
-        qs = model.objects.values(*[field.name for field in fields]).filter(**query)
+        qs = model.objects.values(*[field for field in fields]).filter(**query)
         if not request.user.is_superuser and request.user.office is not None and request.user.is_staff:
             _data = request.user.office.limitation.get("field", {}).get(model._meta.model_name, {})
             _data = {key: value for key, value in _data.items() if value}
