@@ -56,6 +56,6 @@ class List(LoginRequiredMixin, PermissionRequiredMixin, View):
             filter = filterset_factory(model, getattr(model, "filter_fields", []))(request.GET, queryset=qs)
             qs = filter.qs
 
-        qs = qs.order_by("-created")
+        qs = qs.order_by("-id")
         qs = Paginator(qs, 30).page(request.GET.get('page', 1))
         return render(request, f"core/list.html", locals())
