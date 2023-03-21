@@ -181,7 +181,7 @@ AUTH_USER_MODEL = 'core.User'
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = "login"
 LOGIN_REDIRECT_URL = "core:home"
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+# SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 # DEBUG TOOLBAR
 HOSTNAME = env.get_value("HOSTNAME", default="localhost:8000")
