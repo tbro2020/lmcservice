@@ -26,9 +26,12 @@ class List(LoginRequiredMixin, PermissionRequiredMixin, View):
         field_names = [field.name for field in model._meta.get_fields()]
         query = {key: value for key, value in query.items() if key in field_names and value}
 
-        fields = [field for field in model._meta.fields if field.name in model.list_display_fields] if \
-            hasattr(model, "list_display_fields") else \
-            [field for field in model._meta.fields if field.get_internal_type() == 'CharField' or field.name == 'id']
+        # fields = [field for field in model._meta.fields if field.name in model.list_display_fields] if \
+        #    hasattr(model, "list_display_fields") else \
+        #    [field for field in model._meta.fields if field.get_internal_type() == 'CharField' or field.name == 'id']
+
+        fields = model.list_display_fields if hasattr(model, "list_display_fields") else \
+                 [field for field in model._meta.fields if field.get_internal_type() == 'CharField' or field.name == 'id']
 
         # apply filter according to the office or user limitation info to view
         qs = model.objects.values(*[field.name for field in fields]).filter(**query)
