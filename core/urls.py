@@ -31,7 +31,7 @@ urlpatterns = [
     path("delete/<str:app>/<str:model>/<int:pk>", Delete.as_view(), name="delete"),
 
     path("document/<str:app>/<str:model>/<str:template>", Document.as_view(), name="document"),
-    path("action/<str:app>/<str:model>/<str:action>", Action.as_view(), name="action"),
+    path("action/<str:app>/<str:model>/<str:verbose>", Action.as_view(), name="action"),
     path("export/<str:app>/<str:model>", Export.as_view(), name="export"),
 
     path("api-check-point-operation", api.OperationAPIView.as_view(), name="api-check-point-operation"),
