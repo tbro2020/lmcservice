@@ -20,6 +20,7 @@ class User(AbstractUser):
 
     list_display_fields = ("id", "first_name", "last_name", "email", "company__name", "office__name", "is_active")
     form_fields = ("last_name", "first_name", "email", "is_active")
+    filter_fields = ("company", "office")
 
     extra = {
         "fields": ({
