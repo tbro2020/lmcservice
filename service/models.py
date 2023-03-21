@@ -46,7 +46,7 @@ class Company(models.Model):
     change_actions = ({
                           "verbose_name": "Activate",
                           "method": "POST",
-                          "url": reverse("core:action", kwargs={"app": "service", "model": "company", "action": "Activate"}),
+                          "url": reverse("core:action", kwargs={"app": "service", "model": "company", "verbose": "Activate"}),
                           "permission": "service.change_company",
                           "limitation": {"is_active": False},
                           "values": {"is_active": True},
@@ -54,7 +54,7 @@ class Company(models.Model):
                       }, {
                           "verbose_name": "Dis-activate",
                           "method": "POST",
-                          "url": reverse("core:action", kwargs={"app": "service", "model": "company", "action": "Dis-activate"}),
+                          "url": reverse("core:action", kwargs={"app": "service", "model": "company", "verbose": "Dis-activate"}),
                           "permission": "service.change_company",
                           "limitation": {"is_active": True},
                           "values": {"is_active": False},
@@ -226,7 +226,7 @@ class Operation(models.Model):
       }, {
         "verbose_name": "Pay",
         "method": "POST",
-        "url": reverse("core:action", kwargs={"app": "service", "model": "operation", "action": "Pay"}),
+        "url": reverse("core:action", kwargs={"app": "service", "model": "operation", "verbose": "Pay"}),
         "permission": "service.change_operation",
         "limitation": {"status": VALIDATE},
         "condition": "not request.user.is_staff",
@@ -243,7 +243,7 @@ class Operation(models.Model):
       }, {
           "verbose_name": "Submit",
           "method": "POST",
-          "url": reverse("core:action", kwargs={"app": "service", "model": "operation", "action": "Submit"}),
+          "url": reverse("core:action", kwargs={"app": "service", "model": "operation", "verbose": "Submit"}),
           "permission": "service.change_operation",
           "limitation": {"status": CREATED},
           "values": {"status": SUBMITTED},
