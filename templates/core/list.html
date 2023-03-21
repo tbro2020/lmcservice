@@ -62,7 +62,7 @@
                         {% for field in fields %}
                         <td>
                             {% if field.name == "status" %}
-                                <span class="badge badge-{{ obj|getdict:field.name|displaystatus }}">{{ obj|getdict:field.name|default:"-" }}</span>
+                                <span class="badge badge-{{ obj|getdict:field|displaystatus }}">{{ obj|getdict:field|default:"-" }}</span>
                                 {% else %}
                                 {{ obj|getdict:field.name|default:"-" }}
                             {% endif %}
