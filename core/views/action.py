@@ -32,7 +32,8 @@ class Action(LoginRequiredMixin, PermissionRequiredMixin, View):
             if not eval(prerequisite.get("condition", "False")):
                 messages.error(request, prerequisite.get("message", {}).get("error", "We fail this action"))
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-            eval(prerequisite.get("action", "False"))
+            action = eval(prerequisite.get("action", "False"))
+            if action: messages.success(request, prerequisite.get("message", {}).get("success", "Action success"))
             
         qs.update(**data)
         post_save.send(model, instance=qs.last(), created=False)
