@@ -193,7 +193,10 @@ class Operation(models.Model):
         "fields": ({
            "condition": "request.user.is_staff",
            "name": "status"
-        },)
+        }, {
+            "condition": "request.user.is_staff",
+            "name": "proof_of_payment"
+        })
     }
 
     list_export_fields = ("id", "company", "status", "cost", "payment_method", "created")
