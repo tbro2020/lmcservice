@@ -11,10 +11,10 @@ class Home(LoginRequiredMixin, View):
         qs = models.Operation.objects.filter(created__year=datetime.today().year)
 
         # case of staff
-        #if request.user.is_staff and request.user.office is not None:
-        #    _data = request.user.office.limitation.get("field", {}).get("operation", {})
-        #    _data = {key: value for key, value in _data.items() if value}
-        #    qs = qs.filter(**request.user.office.limitation.get("field", {}).get("operation", {}))
+        if request.user.is_staff and request.user.office is not None:
+            _data = request.user.office.limitation.get("field", {}).get("operation", {})
+            _data = {key: value for key, value in _data.items() if value}
+            qs = qs.filter(**request.user.office.limitation.get("field", {}).get("operation", {}))
 
         # Case of forwarder user
         if request.user.company is not None: qs = qs.filter(company=request.user.company)

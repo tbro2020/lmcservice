@@ -59,7 +59,7 @@
               <tbody>
                 {% for obj in qs %}
                     <tr>
-                        {% for field in fields %}
+                        {% for field in model.list_display_fields %}
                         <td>
                             {% if field.name == "status" %}
                                 <span class="badge badge-{{ obj|getdict:field.name|displaystatus }}">{{ obj|getdict:field.name|default:"-" }}</span>

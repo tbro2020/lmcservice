@@ -64,7 +64,7 @@ def report(app, model, query, email):
         return
 
     model = apps.get_model(app, model)
-    print(query)
+    # filterset_factory
     qs = model.objects.filter(**query)
 
     filename, path = worksheet_filename_path()

@@ -51,4 +51,4 @@ class Transaction(models.Model):
         verbose_name_plural = _("Transactions")
 
     form_fields = ("company", "amount", "method", "description", "status")
-    list_display_fields = ("id", "company", "amount", "method", "status", "created")
+    list_display_fields = ("id", "company__name", "amount", "method", "status", "created")
