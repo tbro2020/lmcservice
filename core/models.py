@@ -18,7 +18,7 @@ class User(AbstractUser):
 
     objects = UserManager()
 
-    list_display_fields = ("id", "first_name", "last_name", "email", "company", "office", "is_active")
+    list_display_fields = ("id", "first_name", "last_name", "email", "company__name", "office__name", "is_active")
     form_fields = ("last_name", "first_name", "email", "is_active")
 
     extra = {
@@ -76,6 +76,8 @@ class BillingInfo(models.Model):
         verbose_name = _("Billing Information")
         verbose_name_plural = _("Billing Informations")
 
+    list_display_fields = ("id", "name", "city", "country")
+
 
 class Office(models.Model):
     IMPORTATION = "Importation"
@@ -92,6 +94,8 @@ class Office(models.Model):
     created = models.DateTimeField(_("Created"), auto_now_add=True)
 
     form_fields = ("name", "billing_info", "supervisor", "limitation")
+    list_display_fields = ("id", "name", "supervisor", "billing_info__name")
+
 
     def __str__(self):
         return self.name
@@ -107,6 +111,8 @@ class BorderCrossing(models.Model):
     def __str__(self):
         return self.name
 
+    list_display_fields = ("id", "name")
+
     class Meta:
         verbose_name = _("Border Crossing")
         verbose_name_plural = _("Border(s) Crossing")
@@ -118,6 +124,8 @@ class Unit(models.Model):
 
     def __str__(self):
         return self.name
+
+    list_display_fields = ("id", "name", "abbreviation")
 
     class Meta:
         verbose_name = _("Product Unit")
@@ -135,6 +143,8 @@ class ProductType(models.Model):
 
     def __str__(self):
         return "({unit}) {name}".format(unit=self.unit.name, name=self.name)
+
+    list_display_fields = ("id", "fees", "unit")
 
     class Meta:
         verbose_name = _("Product Type")
