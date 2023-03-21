@@ -48,8 +48,7 @@ class List(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         if "q" in request.GET.dict():
             value = request.GET.dict().get("q", None)
-            q = [Q(**{f"{field.name}__icontains": value}) for field in fields if
-                 field.get_internal_type() == 'CharField']
+            q = [Q(**{f"{field}__icontains": value}) for field in fields]
             qs = qs.filter(reduce(operator.or_, q))
 
         if hasattr(model, "filter_fields"):
