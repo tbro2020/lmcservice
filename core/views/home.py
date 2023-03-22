@@ -18,9 +18,11 @@ class Home(LoginRequiredMixin, View):
 
         # Case of forwarder user
         if request.user.company is not None: qs = qs.filter(company=request.user.company)
+
         data = {"pie": {"labels": [], "data": []}, "bar": {"labels": [], "data": {}}}
 
         status = qs.values("status").annotate(Count("status"))
+
         for pie in status:
             data["pie"]["labels"].append(pie.get("status"))
             data["pie"]["data"].append(pie.get("status__count"))

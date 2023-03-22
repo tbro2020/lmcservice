@@ -196,6 +196,9 @@ class Operation(models.Model):
         }, {
             "condition": "request.user.is_staff",
             "name": "proof_of_payment"
+        }, {
+            "condition": "request.user.is_staff",
+            "name": "payment_method"
         })
     }
 

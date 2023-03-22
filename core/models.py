@@ -24,21 +24,21 @@ class User(AbstractUser):
 
     extra = {
         "fields": ({
-           "condition": "request.user.is_staff",
-           "name": "office"
-        }, {
-           "condition": "request.user.is_staff",
-           "name": "company"
-        }, {
-           "condition": "request.user.is_staff",
-           "name": "is_staff"
-        }, {
-           "condition": "request.user.is_staff",
-           "name": "is_superuser"
-        },  {
-           "condition": "request.user.is_staff",
-           "name": "groups"
-        })
+                       "condition": "request.user.is_staff",
+                       "name": "office"
+                   }, {
+                       "condition": "request.user.is_staff",
+                       "name": "company"
+                   }, {
+                       "condition": "request.user.is_staff",
+                       "name": "is_staff"
+                   }, {
+                       "condition": "request.user.is_staff",
+                       "name": "is_superuser"
+                   }, {
+                       "condition": "request.user.is_staff",
+                       "name": "groups"
+                   })
     }
 
     def __str__(self):
@@ -96,7 +96,6 @@ class Office(models.Model):
 
     form_fields = ("name", "billing_info", "supervisor", "limitation")
     list_display_fields = ("id", "name", "supervisor", "billing_info__name")
-
 
     def __str__(self):
         return self.name

@@ -7,8 +7,6 @@ from django.db.models.signals import post_save
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
-from service.models import *
-
 
 class Action(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get_permission_required(self):
@@ -25,8 +23,8 @@ class Action(LoginRequiredMixin, PermissionRequiredMixin, View):
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
         actions = [action for action in model.change_actions
-                   if action.get("prerequisite") and action.get("verbose_name") in [verbose, verbose.lower()]]
-        actions = actions[0] if len(actions) > 0 else {}
+                   if action.get("prerequisite") and action.get("verbose_name") == verbose]
+        actions = actions[0] if len(actions) == 1 else {}
 
         if actions.get("prerequisite", False):
             prerequisite = actions.get("prerequisite")

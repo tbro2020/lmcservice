@@ -181,6 +181,7 @@ AUTH_USER_MODEL = 'core.User'
 LOGIN_URL = "login"
 LOGOUT_REDIRECT_URL = "login"
 LOGIN_REDIRECT_URL = "core:home"
+
 # SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 # DEBUG TOOLBAR
@@ -200,7 +201,7 @@ CACHES = {
     }
 }
 
-CSRF_TRUSTED_ORIGINS = []  # ["https://c855-2c0f-e00-607-a300-31f9-b0c8-8e6c-4ad9.eu.ngrok.io"]
+# CSRF_TRUSTED_ORIGINS = ["https://c855-2c0f-e00-607-a300-31f9-b0c8-8e6c-4ad9.eu.ngrok.io"]
 
 # CELERY related settings
 if DEBUG:
