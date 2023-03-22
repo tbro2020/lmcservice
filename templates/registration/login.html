@@ -1,15 +1,61 @@
-{% extends 'registration/base.html' %}
-
 {% load i18n %}
 {% load static %}
 {% load crispy_forms_tags %}
 {% get_current_language as LANGUAGE_CODE %}
 
-{% block content %}
-<form method="post">
-    {% csrf_token %}
-    {{ form|crispy }}
-    <small class="text-right"><a href="{% url 'password_reset' %}">{% trans 'Reset password' %}</a></small>
-    <button type="submit" class="btn btn-primary mt-2 col">{% trans "Log in" %}</button>
-</form>
-{% endblock %}
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="icon"href="{% static 'favicon.ico' %}">
+        <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Lignes Martimes Congolaises{% endblock title %}</title>
+
+        <meta name="description" content="{% block description %}LMC Services{% endblock description %}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="col" style="margin-top: 5rem;">
+            <div class="row">
+                <div class="col-md-6 col-sm-12 col-xs-12">
+                    <h1 class="display-3" style="margin-bottom: 0%;">LMC</h1>
+                    <small style="margin-top: 0%;">Lignes Maritimes Congolaises</small>
+
+                    <div class="text-center">
+                        <img src="{% static "image/logo.png" %}" class="img-fluid" style="width: 15rem;height: 15rem;" alt="lmc-logo">
+                    </div>
+                    <div class="text-center" style="margin-top: 2rem;">
+                        <h1>
+                        <span
+                            class="txt-rotate"
+                            data-period="2000"
+                            data-rotate='[ "{% trans "Get your ATM" %}", "{% trans "Manage your payment" %}", "{% trans "Manage your user" %}", "{% trans "Thats LMC!" %}" ]'></span>
+                        </h1>
+                        <small class="text-muted">{% trans "Armement National" %}</small>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12 col-xs-12" style="margin-top: 2rem;">
+                    <h2>{% translate "Welcome" %}</h2>
+                    <small>{% translate "Authenticate your business from here" %}</small>
+                    <hr>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button style="margin-top: 1rem;" type="submit" class="btn btn-success btn-lg col">{% translate "Login" %}</button>
+                        <div class="col float-end">
+                            <a href="{% url 'password_reset' %}" style="font-size: 0.80rem;text-decoration: none;" class="text-info">{% trans "Forgot password" %}</a>
+                        </div>
+                        <hr>
+                        <a href="#" style="margin-top: 0.15rem;" class="btn btn-primary btn-lg col">{% trans "Register" %}</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+        <script>var _0x36df=['length','substring','data-period','isDeleting','loopNum','period','createElement','289094AZIuXO','getAttribute','toRotate','type','1946087jtFKZW','322oLKBAI','body','2MVyopX','tick','innerHTML','parse','364350vxhrBU','903503qKHjWZ','txt','prototype','211217UdKmCx','getElementsByClassName','<span\x20class=\x22wrap\x22>','appendChild','1jigpsW','744957QDriuQ','data-rotate','3958srapVe','style','onload'];var _0x19f613=_0x5d73;function _0x5d73(_0x2d507a,_0x50e5ff){return _0x5d73=function(_0x36df91,_0x5d7395){_0x36df91=_0x36df91-0x1c0;var _0x5d4018=_0x36df[_0x36df91];return _0x5d4018;},_0x5d73(_0x2d507a,_0x50e5ff);}(function(_0x412421,_0x285cb0){var _0x10950f=_0x5d73;while(!![]){try{var _0x2199f0=-parseInt(_0x10950f(0x1d2))*parseInt(_0x10950f(0x1ca))+parseInt(_0x10950f(0x1ce))+parseInt(_0x10950f(0x1c3))+-parseInt(_0x10950f(0x1d9))*parseInt(_0x10950f(0x1c8))+-parseInt(_0x10950f(0x1d6))*parseInt(_0x10950f(0x1cf))+parseInt(_0x10950f(0x1d7))+parseInt(_0x10950f(0x1c7));if(_0x2199f0===_0x285cb0)break;else _0x412421['push'](_0x412421['shift']());}catch(_0x518986){_0x412421['push'](_0x412421['shift']());}}}(_0x36df,0xb5a8b));var TxtRotate=function(_0x2a35ee,_0x2a358d,_0x316b6f){var _0x4bc2b2=_0x5d73;this[_0x4bc2b2(0x1c5)]=_0x2a358d,this['el']=_0x2a35ee,this[_0x4bc2b2(0x1c0)]=0x0,this['period']=parseInt(_0x316b6f,0xa)||0x7d0,this[_0x4bc2b2(0x1d0)]='',this[_0x4bc2b2(0x1cb)](),this['isDeleting']=![];};TxtRotate[_0x19f613(0x1d1)]['tick']=function(){var _0x49a699=_0x19f613,_0x15fc6b=this[_0x49a699(0x1c0)]%this[_0x49a699(0x1c5)][_0x49a699(0x1dc)],_0x149452=this[_0x49a699(0x1c5)][_0x15fc6b];this['isDeleting']?this[_0x49a699(0x1d0)]=_0x149452[_0x49a699(0x1dd)](0x0,this[_0x49a699(0x1d0)][_0x49a699(0x1dc)]-0x1):this[_0x49a699(0x1d0)]=_0x149452[_0x49a699(0x1dd)](0x0,this[_0x49a699(0x1d0)][_0x49a699(0x1dc)]+0x1);this['el'][_0x49a699(0x1cc)]=_0x49a699(0x1d4)+this[_0x49a699(0x1d0)]+'</span>';var _0x2525a3=this,_0x52caae=0x12c-Math['random']()*0x64;this[_0x49a699(0x1df)]&&(_0x52caae/=0x2);if(!this[_0x49a699(0x1df)]&&this[_0x49a699(0x1d0)]===_0x149452)_0x52caae=this[_0x49a699(0x1c1)],this['isDeleting']=!![];else this['isDeleting']&&this[_0x49a699(0x1d0)]===''&&(this[_0x49a699(0x1df)]=![],this[_0x49a699(0x1c0)]++,_0x52caae=0x1f4);setTimeout(function(){var _0x2789b7=_0x49a699;_0x2525a3[_0x2789b7(0x1cb)]();},_0x52caae);},window[_0x19f613(0x1db)]=function(){var _0x385e27=_0x19f613,_0x122e0a=document[_0x385e27(0x1d3)]('txt-rotate');for(var _0x1e7f71=0x0;_0x1e7f71<_0x122e0a[_0x385e27(0x1dc)];_0x1e7f71++){var _0x9dc5a4=_0x122e0a[_0x1e7f71][_0x385e27(0x1c4)](_0x385e27(0x1d8)),_0x5a6924=_0x122e0a[_0x1e7f71][_0x385e27(0x1c4)](_0x385e27(0x1de));_0x9dc5a4&&new TxtRotate(_0x122e0a[_0x1e7f71],JSON[_0x385e27(0x1cd)](_0x9dc5a4),_0x5a6924);}var _0x43f8f6=document[_0x385e27(0x1c2)](_0x385e27(0x1da));_0x43f8f6[_0x385e27(0x1c6)]='text/css',_0x43f8f6[_0x385e27(0x1cc)]='.txt-rotate\x20>\x20.wrap\x20{\x20border-right:\x200.08em\x20solid\x20#666\x20}',document[_0x385e27(0x1c9)][_0x385e27(0x1d5)](_0x43f8f6);};</script>
+    </body>
+</html>

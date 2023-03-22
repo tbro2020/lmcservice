@@ -134,11 +134,46 @@
 </head>
 
 <body>
+
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="{% url 'core:home' %}">
+        {{ request.user.company|default:request.user.office }}
+      </a>
+
+      <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      {% if request.user.company %}
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item text-nowrap font-weight-bold h5">
+              <span class="badge badge-primary">[{{ request.user.company.balance }}]</span>
+            </li>
+          </ul>
+      {% endif %}
+
+        <ul class="navbar-nav px-2">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link text-light" href="{% url 'core:edit' 'core' 'user' request.user.id %}">
+              {{ request.user.get_full_name|default:request.user.email }}
+          </a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav px-2">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link text-danger" href="{% url "logout" %}">{% trans "Logout" %}</a>
+        </li>
+      </ul>
+    </header>
+
+
     <div class="container-fluid">
       <div class="row">
             <nav class="col-md-2 d-none d-md-block bg-dark text-light sidebar">
       <div class="sidebar-sticky">
 
+        {% comment %}
         <div class="col text-center mt-1 mb-1">
             <img width="64" src="{% static 'image/logo.png' %}" class="img-fluid" />
         </div>
@@ -160,20 +195,15 @@
             </h6>
         {% endif %}
 
-        <ul class="nav flex-column">
+        {% endcomment %}
 
+        <ul class="nav flex-column mt-5 mb-1">
           <li class="nav-item">
             <a class="nav-link text-light {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'core:home' %}">
               {% trans 'Home' %} <span class="sr-only">(current)</span>
-                {% if request.user.company %}
-                    <span class="badge badge-primary">[{{ request.user.company.balance }}]</span>
-                {% endif %}
             </a>
             <a class="nav-link text-capitalize text-warning" href="{% url 'password_reset' %}">
                 {% trans 'Reset password' %}<span class="sr-only">(current)</span>
-            </a>
-            <a class="nav-link text-capitalize text-danger" href="{% url 'logout' %}">
-                {% trans 'logout' %}<span class="sr-only">(current)</span>
             </a>
           </li>
 
