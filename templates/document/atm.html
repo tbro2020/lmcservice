@@ -2,215 +2,321 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ATM URN {{ obj.operation_type }}#{% now "m" %}/{% now 'y' %}/{{ obj.id }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <title>ATM #{{ obj.id }}</title>
     <style>
-        .container-fluid{
+        html, body{
             width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            font-family: arial, sans-serif;
+            font-size: 18px;
         }
-        .img-fluid, .img-thumbnail{
+        .img-thumbnail{
             width: 128px;
         }
-        .small-text{
-            font-size: 0.75rem;
-        }
-        .card{
-            border-radius: 0%;
-        }
         dt{
-            font-size: 0.75rem;
+            font-size: 12px;
+            font-weight: 600;
         }
         dd{
-            font-size: 0.70rem;
+            margin-bottom: 0px;
         }
         {% if obj.status == "COMPLETED" %}
         .bg {
-            background-image: url("https://upload.wikimedia.org/wikipedia/commons/0/0c/Armoiries_de_la_R%C3%A9publique_d%C3%A9mocratique_du_Congo_-_2006.png");
+            background-image: url("https://lmc-storage.fra1.digitaloceanspaces.com/drc-arm.png");
             background-position: center;
-            background-repeat: repeat-y;
-            position: fixed;
-            top: 5%;
-            bottom: 5%;
-            width: 100%;
+            background-repeat: round;
+            position: absolute;
+            width: 100%; 
             height: 100%;
-            opacity: .025;
             z-index: -1;
         }
         {% endif %}
-
-        {% if obj.status != "COMPLETED" %}
-        .draft {
-            color: orange;
-            font-size: 20rem;
-            font-weight: bolder;
-            writing-mode: vertical-rl;
-            text-orientation: sideways-right;
-
-            z-index: -1;
-            position: fixed;
-            opacity: .75;
+        .break-page{
+            page-break-after: always;
         }
-        {% endif %}
+        .full-width{
+            width: 100% !important;
+        }
+        .half-width{
+            width: 50% !important; 
+        }
+        .text-left{
+            text-align: left !important;
+        }
+        .text-right{
+            text-align: right !important;
+        }
 
-        @media print {
-            .pagebreak {
-                clear: both;
-                page-break-after: always;
-                background-color: transparent;
-            }
+        dl {
+            width: 100%;
+            overflow: hidden;
+            padding: 0;
+            margin: 0
+        }
+        dt {
+            float: left;
+            text-align: right;
+            font-weight: bold;
+            width: 50%;
+            padding: 0;
+            margin: 0
+        }
+        dd {
+            float: left;
+            text-align: right;
+            width: 50%;
+            padding: 0;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        .card{
+            background-color: #212529 !important;
+            color: white !important;
+            padding: 1.5%;
+        }
+        .text-uppercase{
+            text-transform: uppercase;
         }
     </style>
 </head>
 <body>
-    {% if obj.status == "COMPLETED" %}
-        <div class="d-print-block"></div>
-    {% endif %}
+    {% for product in qs %}
 
-    {% if obj.operation_type == "Exportation" %}
-        {% for product in qs %}
-            {% if product.is_activated %}
-                <div class="container-fluid pagebreak d-print-block">
-                <div class="bg"></div>
-                <div class="row" style="padding: 2.5%;">
-                    <div class="col">
-                        <div class="row float-start">
-                            <div class="col text-end"><img class="img-fluid" src="{% static "image/logo.png" %}" alt="lmc-logo"></div>
-                            <div class="col small-text">
-                                <h5>LMC</h5>
-                                <small>Lignes Maritimes Congolaises</small><br>
-                                <small>13 Avenue des Aviateurs, Commune de la Gombe, Kinshasa</small>
-                                <p>B.P. 8038 - KINSHASA - RDC</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="row float-end">
-                            <div class="col text-end">
-                                <h5>ATM</h5>
+    {% if obj.status == "COMPLETED" %}
+    <div class="bg"></div>
+    {% endif %}
+    
+    <div class="main full-width break-page">
+        <table class="full-width">
+            <tr>
+                <td class="text-left half-width">
+                    <table class="full-width">
+                        <tr>
+                            <td class="text-right" width="128">
+                                <img width="128" src="{% static "image/logo.png" %}" alt="lmc-logo">
+                            </td>
+                            <td class="text-left">
+                                <h5 style="font-size: 1.5rem;margin-bottom: 0px;">LMC</h5>
+                                <small>13 Avenue des Aviateurs, Commune de la Gombe, Kinshasa RDC B.P. 8038</small>
+                                <p>RCCM: CD/RCCM/14-B-3622 <br>
+                                ID. NAT: 01-715-A06030E <br>
+                                N°IMPOT : A0700620H</p>
+                                <h5 style="font-size: 1.1rem;margin-top: 0px;">N°{{ obj.id }}/{{ product.id }}</h5>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td class="text-right half-width">
+                    <table class="full-width text-right">
+                        <tr>
+                            <td style="width: 80%" class="text-right">
+                                <h5 style="font-size: 2.5rem;margin-bottom: 0px;">ATM</h5>
+                                <small style="margin-top: 0px;">Attestation de Transit Maritime</small>
                                 <dl class="row small-text">
-                                    <dt class="col-sm-4 d-block">N°</dt>
-                                    <dd class="col-sm-8" style="font-size: 14px;">
-                                        {% if obj.status == "COMPLETED" %}
-                                            {% now "Y" %}-
-                                                {% if obj.operation_type == "Importation" %}
-                                                    IMP
-                                                {% elif obj.operation_type == "Exportation" %}
-                                                    EXP
-                                                {% endif %}
-                                            {% now "m" %}
-                                            {{ obj.id }}
-                                        {% else %}
-                                            <span class="text-warning">#000000</span>
+                                    <dt style="width: 20%">N°</dt>
+                                    <dd style="width: 80%">{% if obj.status == "COMPLETED" %}
+                                        {% now "Y" %}-{% if obj.operation_type == "Importation" %}IMP{% elif obj.operation_type == "Exportation" %}EXP{% endif %}-{% now "m" %}0-{{ obj.id }}{% else %}<span class="text-warning">#000000</span>
                                         {% endif %}
                                     </dd>
 
-                                    <dt class="col-sm-4 d-block">Ref. Lot</dt>
-                                    <dd class="col-sm-8">{{ product.ref }}</dd>
+                                    {% if obj.operation_type == "IMPORTATION" %}
+                                    <dt style="width: 20%">Ref. Lot</dt>
+                                    <dd style="width: 80%">{{ product.ref|default:"0000000000" }}</dd>
 
-                                    <dt class="col-sm-4 d-block">Truck N°</dt>
-                                    <dd class="col-sm-8">{{ product.truck }}</dd>
+                                    <dt style="width: 20%">Truck N°</dt>
+                                    <dd style="width: 80%">{{ product.truck|default:"0000000000" }}</dd>
+                                    {% endif %}
                                 </dl>
-                            </div>
-                            <div class="col"><img class="img-fluid" src="{% static "image/drc.svg" %}" alt="drc-flag"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col" style="margin-top: 1%;">
-                    <dl class="row small-text bg-dark text-light text-uppercase" style="padding: 1.5%;">
-                        <dt class="col-sm-3 text-end" style="margin-top: 0.5%;">
-                            EXPORTATEUR : <br>
-                            <small>Importateur</small>
-                        </dt>
-                        <dd class="col-sm-9" style="margin-top: 0.5%;">
-                            <b>{{ obj.company.name }}</b>
-                            /{{ obj.importer_expoter }}
-                            <br>
-                            {{ obj.company.address|title }}, {{ obj.company.city|title }}, {{ obj.company.country|title }}
-                            <br> TEL : {{ obj.company.phone_number }}
-                            <br> EMAIL: {{ obj.company.email }}
-                        </dd>
+                            </td>
+                            <td style="width: 20%" class="text-right">
+                                <img width="128" src="{% static "image/drc.svg" %}" alt="drc-flag">
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+
+        <div class="full-width" style="background-color: #212529 !important;color: white;padding: 7.5px;">
+            <table>
+                {% if obj.operation_type == "Importation" %}
+                <tr>
+                    <td class="text-right" style="margin-left: 10px !important;font-weight: bold !important;">
+                        SHIPPING LINE : <br>
+                        <small class="fst-italic">Armateur</small>
+                    </td>
+                    <td style="margin-left: 10px !important;">
+                        {{ obj.business.name }}
+                        <br>
+                        {{ obj.business.address|title }}, {{ obj.business.city|title }}, {{ obj.business.country|title }}
+                        <br> TEL : +243990580000
+                        <br> EMAIL: contact@lmc.cd
+                    </td>
+                </tr>
+                {% endif %}
+
+                {% if obj.operation_type == "Exportation" %}
+                <tr>
+                    <td class="text-right" style="margin-left: 10px !important;font-weight: bold !important;width: 30%;">
+                        EXPORTATEUR: <br>
+                        <small>Forwarder</small>
+                    </td>
+                    <td style="width: 70%;">
+                        <b>{{ obj.business.name }}</b>
+                        / {{ obj.importer_expoter|default:"-" }}
+                        <br>
+                        {{ obj.business.address|title }}, {{ obj.business.city|title }}, {{ obj.business.country.name }}
+                        TEL : +243990580000
+                        EMAIL: contact@lmc.cd
+                    </td>
+                </tr>
+                {% endif %}
+
+            </table>
+        </div>
+
+        <table class="full-width" style="margin-top: 0% !important;">
+            <tr class="half-width">
+                <td>
+                    <dl>
+                        <dt>{% if obj.operation_type == "Exportation" %}
+                            BP
+                          {% else %}
+                            MANIFEST
+                          {% endif %} N° : </dt>
+                        
+                        <dd>{{ obj.manifest_bp_no|default:"-" }}</dd>
+        
+                        {% if obj.exit_point %}
+                        <dt>BORDER CROSSING :</dt>
+                        <dd>{{ obj.exit_point.name }}</dd>
+                        {% endif %}
+
+                        {% if obj.ship_name %}
+                        <dt>VESSEL NAME :</dt>
+                        <dd>{{ obj.ship_name|default:"-" }}</dd>
+                        {% endif %}
+
+                        {% if obj.trip_nber %}
+                        <dt>VOYAGE N° :</dt>
+                        <dd>{{ obj.trip_nber|default:"-" }}</dd>
+                        {% endif %}
+        
+                        {% if obj.departure %}
+                        <dt>E.T.D : </dt>
+                        <dd>{{ obj.departure|default:"-" }}</dd>
+                        {% endif %}
+
+                        {% if product.ref %}
+                        <dt>Ref.Lot : </dt>
+                        <dd>{{ product.ref|default:"-" }}</dd>
+                        {% endif %}
+
+                        {% if product.truck %}
+                        <dt>Truck : </dt>
+                        <dd>{{ product.truck|default:"-" }}</dd>
+                        {% endif %}
                     </dl>
-                </div>
-                <div class="col" style="margin-top: 1%;padding: 1.5%">
-                    <div class="row">
-                        <div class="col text-end">
-                            <dl class="row small-text text-uppercase">
-                                <dt class="col-sm-5 d-block">MANIFEST/BP N° : </dt>
-                                <dd class="col-sm-7">{{ obj.manifest_bp_no|default:"000000" }}</dd>
+                </td>
+                <td class="half-width">
+                    <dl>
+                        {% if obj.load_point %}
+                        <dt>LOADING PORT :</dt>
+                        <dd>{{ obj.load_point.name }}</dd>
+                        {% endif %}
 
-                                <dt class="col-sm-5 d-block">BORDER CROSSING :</dt>
-                                <dd class="col-sm-7">{{ obj.exit_point.name }}</dd>
+                        {% if obj.unload_point %}
+                        <dt>PORT OF DISCHARGE :</dt>
+                        <dd>{{ obj.unload_point.name|default:"-" }}</dd>
+                        {% endif %}
 
-                                <dt class="col-sm-5 d-block">LOADING PORT :</dt>
-                                <dd class="col-sm-7">{{ obj.load_point.name }}</dd>
-                                {% comment %}
-                                <dt class="col-sm-5 d-block">VESSEL NAME :</dt>
-                                <dd class="col-sm-7">{{ obj.ship_name }}</dd>
+                        {% if obj.end_point %}
+                        <dt>FINAL DESTINATION :</dt>
+                        <dd>{{ obj.end_point|default:"-" }}</dd>
+                        {% endif %}
 
-                                <dt class="col-sm-5 d-block">COUNTRY ORIGIN :</dt>
-                                <dd class="col-sm-7">{{ obj.entry_exit_point.name }}</dd>
-                                {% endcomment %}
-                            </dl>
-                        </div>
-                        <div class="col text-end">
-                            <dl class="row small-text text-uppercase">
-                                <dt class="col-sm-5 d-block">ORIGIN POINT :</dt>
-                                <dd class="col-sm-7">{{ obj.entry_point.name }}</dd>
+                        {% if obj.arrival %}
+                        <dt>E.T.A :</dt>
+                        <dd>{{ obj.arrival|default:"-" }}</dd>
+                        {% endif %}
 
-                                <dt class="col-sm-5 d-block">DESTINATION :</dt>
-                                <dd class="col-sm-7">{{ product.destination }}</dd>
-                            </dl>
-                        </div>
-                    </div>
-                </div>
-                <div class="col" style="margin-top: 1%;">
-                    <dl class="row bg-dark text-light" style="padding: 1.5%;">
-                        <dt class="col-sm-3 text-end">
-                            TYPE/MODE OF TRANSPORT <br>
-                            <small class="text-muted small-text">Type de transport</small>
-                        </dt>
-                        <dd class="col-sm-9">Maritime (CONTAINER/CONTENEUR)</dd>
+                        {% if product.destination %}
+                        <dt>Destination : </dt>
+                        <dd>{{ product.destination|default:"-" }}</dd>
+                        {% endif %}
                     </dl>
-                </div>
-                <div class="col" style="margin-top: 1%;padding: 1.5%;border-top: 2px solid black;">
-                    <div class="row">
-                        <div class="col">
-                            <b class="text-uppercase" style="margin-bottom: 0px;padding-bottom: 0px;font-size: 0.70rem;">Declared values provided by Shipping Line. ATM to be submitted together with Cargo Manifest at Discharge or Transit Port.</b>
-                            <small class="text-muted text-uppercase" style="font-size: 12px;margin-top: 0px;padding-top: 0px; font-size: 0.60rem;">Valeurs déclarées fournies par la compagnie maritime. ATM à soumettre avec le manifeste de la cargaison au port de déchargement ou de transit.</small>
-                            <br>
+                </td>
+            </tr>
+        </table>
 
-                            {% if obj.status == "COMPLETED" %}
-                            <div class="col float-end">
-                                <img class="img-thumbnail" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={'next':'atm','operation':{{ obj.id }},'product':{{ product.id }}}" alt="debit-note-lmc-qr-code">
-                            </div>
-                            {% endif %}
-                        </div>
-                        <div class="col">
-                            <div class="card bg-dark text-white" style="padding: 1.5%;">
-                                <b class="fs-6">VALIDATED BY : <small class="text-muted"> validee par</small></b>
-                                {% if obj.status == "COMPLETED" %}
-                                    <b class="text-uppercase fs-6">{{ obj.updated_by.office.supervisor|default:"LMC" }}</b>
-                                {% else %}
-                                    <b class="text-uppercase fs-6">{{ obj.updated_by.full_name }}</b>
-                                {% endif %}
+        <div class="full-width" style="background-color: #212529 !important;color: white;padding: 7.5px;">
+            <dl class="full-width" style="padding: 1.5%;">
+                <dt style="width: 30%">
+                    TYPE/MODE OF TRANSPORT <br>
+                    <small class="small-text">Type de transport</small>
+                </dt>
+                <dd class="text-left" style="width: 70%">{{ obj.transport }}</dd>
+            </dl>
+        </div>
 
-                                <b class="fs-10"><small>STATUS</small> : {{ obj.status }}</b>
-                                <b class="fs-10"><small>Validated on</small> : {{ obj.updated.date }}</b>
-                                <hr>
-                                <small class="fs-10">Printed on {% now "SHORT_DATETIME_FORMAT" %}</small>
-                            </div>
-                            <br>
+        <div class="full-width" style="background-color: #212529 !important;color: white;padding: 7.5px;">
+            <dl class="full-width" style="padding: 1.5%;">
+                <dt style="width: 30%">
+                    CARGO<br>
+                    <small class="small-text">Cargaison</small>
+                </dt>
+                <dd class="text-left" style="width: 70%">{{ product.product_type.name }} x {{ product.quantity }}({{ product.product_type.unit.abbreviation }})</dd>
+            </dl>
+        </div>
+
+        <div class="full-width" style="margin-top: 1% !important;border-top: 2px solid black;">
+            <table class="full-width">
+                <tr>
+                    <td class="half-width">
+                        <b class="text-uppercase" style="margin-bottom: 0px;padding-bottom: 0px;font-size: 11px;">Declared values provided by Shipping Line. ATM to be submitted together with Cargo Manifest at Discharge or Transit Port.</b>
+                        <small class="text-muted text-uppercase" style="font-size: 9px;margin-top: 0px;padding-top: 0px;">Valeurs déclarées fournies par la compagnie maritime. ATM à soumettre avec le manifeste de la cargaison au port de déchargement ou de transit.</small>
+                        
+
+                        {% if obj.status == "COMPLETED" %}
+                        <div class="col text-start" style="margin-top: 2%;">
+                            <img width="128" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={'next':'atm','operation':{{ obj.id }},'product':{{product.id}}}" alt="lmc-qr-code-{{ obj.id }}">
                         </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
+                        {% endif %}
+                    
+                    </td>
+                    <td class="half-width">
+                        <div class="card">
+                            <dl style="margin-bottom: 0px;">
+                                <dt style="font-size: 16px !important;" class="text-left"><b class="fs-6">VALIDATED BY : <small class="text-muted fs-6"> validee par</small></b></dt>
+                                <dd style="font-size: 19px !important;">
+                                    {% if obj.status == "COMPLETED" %}
+                                        <b class="text-uppercase fs-6">{{ obj.updated_by.custom_office.supervisor|default:"LMC" }}</b>
+                                    {% else %}
+                                        <b class="text-uppercase fs-6">{{ obj.updated_by.full_name }}</b>
+                                    {% endif %}
+                                </dd>
+
+                                <dt style="font-size: 16px !important;" class="text-left"><b class="fs-6">STATUS :</b></dt>
+                                <dd style="font-size: 19px !important;">
+                                    <b>{{ obj.status }}</b>
+                                </dd>
+                            </dl>
+                            <br>
+                            <small class="fs-6">ATM Printed, on {% now "SHORT_DATETIME_FORMAT" %}</small>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    {% endfor %}
+
 </body>
 </html>
