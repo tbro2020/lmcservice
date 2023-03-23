@@ -38,7 +38,8 @@ def paid(pk):
     if ts.exists(): return
     obj, created = Transaction.objects.get_or_create(company=obj.company, amount=-1 * obj.cost,
                                                      description=f"Account debited of {obj.cost} for the payment of "
-                                                                 f"ATM #{obj.id}", status=Transaction.PAID, method=Transaction.WALLET)
+                                                                 f"ATM #{obj.id}", status=Transaction.PAID,
+                                                     method=Transaction.WALLET)
     if created: print(f"Obj {obj.id} created")
 
 
@@ -83,7 +84,7 @@ def report(app, model, query, email):
         for column, field in enumerate(fields):
             worksheet.write(row + 1, column, str(getattr(obj, field.name)))
     workbook.close()
-    client.upload_file(path, settings.AWS_STORAGE_BUCKET_NAME, path)
+    client.upload_file(path, settings.AWS_STORAGE_BUCKET_NAME, path, ExtraArgs={'ACL': 'public-read'})
     path = static(path)
 
     Mailer("email/report.html", {

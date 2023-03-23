@@ -203,7 +203,7 @@ class Operation(models.Model):
     }
 
     list_export_fields = ("id", "company", "status", "cost", "payment_method", "created")
-    list_display_fields = ("id", "company", "status", "cost", "payment_method")
+    list_display_fields = ("id", "company__name", "status", "cost", "payment_method", "created", "updated")
     inline_model_form = {"app_label": "service", "model_name": "Product"}
 
     change_actions = ({
