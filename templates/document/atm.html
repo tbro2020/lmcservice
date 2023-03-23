@@ -279,18 +279,19 @@
         <div class="full-width" style="margin-top: 1% !important;border-top: 2px solid black;">
             <table class="full-width">
                 <tr>
-                    <td class="half-width">
+                    <td style="width: 30%">
                         <b class="text-uppercase" style="margin-bottom: 0px;padding-bottom: 0px;font-size: 11px;">Declared values provided by Shipping Line. ATM to be submitted together with Cargo Manifest at Discharge or Transit Port.</b>
                         <small class="text-muted text-uppercase" style="font-size: 9px;margin-top: 0px;padding-top: 0px;">Valeurs déclarées fournies par la compagnie maritime. ATM à soumettre avec le manifeste de la cargaison au port de déchargement ou de transit.</small>
-                        
+                    </td>
 
+                    <td style="width: 20%">
                         {% if obj.status == "COMPLETED" %}
                         <div class="col text-start" style="margin-top: 2%;">
                             <img width="128" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={'next':'atm','operation':{{ obj.id }},'product':{{product.id}}}" alt="lmc-qr-code-{{ obj.id }}">
                         </div>
                         {% endif %}
-                    
                     </td>
+
                     <td class="half-width">
                         <div class="card">
                             <dl style="margin-bottom: 0px;">
@@ -309,7 +310,8 @@
                                 </dd>
                             </dl>
                             <br>
-                            <small class="fs-6">ATM Printed, on {% now "SHORT_DATETIME_FORMAT" %}</small>
+                            <small class="fs-6">ATM Updated, on {{ obj.updated.date }}</small>
+                            <small class="fs-6">Printed, on {% now "SHORT_DATETIME_FORMAT" %}</small>
                         </div>
                     </td>
                 </tr>
