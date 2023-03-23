@@ -112,10 +112,11 @@
                     <small>Importateur</small>
                 </dt>
                 <dd class="col-sm-9" style="margin-top: 0.25%;">
-                    EAJ INTERNATIONAL DRC SARL
+                    {{ obj.company.name }}
                     <br>
-                    4 5E RUE INDUSTRIEL DANS LA COMMUNE DE LIMETE, KINSHASA, DRC; TEL : +243990580000 ;
-                    EMAIL: contact@lmc.cd
+                    {{ obj.company.address|title }}, {{ obj.company.city|title }}, {{ obj.company.country|title }}
+                    <br> TEL : {{ obj.company.phone_number }}
+                    <br> EMAIL: {{ obj.company.email }}
                 </dd>
                 {% endif %}
             </dl>
@@ -175,14 +176,14 @@
                 <tbody>
                     {% for product in qs %}
                     <tr>
-                        <td>{{ product.product_type.name }}</td>
-                        <td>{{ product.product_type.fees }}</td>
-                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.product_type__name }}</td>
+                        <td>{{ product.product_type__fees }}</td>
+                        <td>{{ product.count|floatformat }}</td>
                         <td>{{ product.penalty|default:"-" }}</td>
-                        {% with product.product_type.fees.amount|multiply:product.quantity as sum  %}
+                        {% with product.product_type__fees|multiply:product.count as sum  %}
                             {% with product.penalty|divide:100 as penality %}
                                 {% with sum|multiply:penality as penality %}
-                                    <td>{{ obj.cost_currency }} {{ sum|add:penality }}</td>
+                                    <td>U$ {{ sum|add:penality }}</td>
                                 {% endwith %}
                             {% endwith %}
                         {% endwith %}

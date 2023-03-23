@@ -75,7 +75,7 @@ class Operation(models.Model):
     EXPORTATION = "Exportation"
 
     TYPE_OPERATIONS = (
-        (IMPORTATION, _('Importation')),
+        # (IMPORTATION, _('Importation')),
         (EXPORTATION, _('Exportation')),
     )
 

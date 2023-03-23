@@ -1,6 +1,8 @@
 from django.apps import apps
 from django.views import View
+from django.db.models import Count, Sum
 from django.shortcuts import render, get_object_or_404
+
 
 # from django.contrib.auth.mixins import LoginRequiredMixin
 # from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -18,4 +20,6 @@ class Document(View):
             data = getattr(model, "inline_model_form", {})
             qs = apps.get_model(app_label=data.get("app_label"), model_name=data.get("model_name")) \
                 .objects.filter(**{model._meta.model_name: obj.id})
+            if isinstance(model, apps.get_model("service", "product", "penalty")):
+                qs = qs.values('product_type__name', 'product_type__fees').annotate(count=Sum('quantity'))
         return render(request, f"document/{template}.html", locals())
