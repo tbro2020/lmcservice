@@ -75,6 +75,19 @@
     </div>
 
     <div class="mb-5">
+
+        {%  if form.errors  %}
+            {% for error in form.errors.as_data.values %}
+                {% for data in error.0 %}
+                    <div class="alert alert-danger">
+                        <ul class="messages mb-0 text-uppercase">
+                            <li>{{ data }}</li>
+                        </ul>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+
         <form method="post" id="form-container" enctype="multipart/form-data">
             {% csrf_token %}
 
