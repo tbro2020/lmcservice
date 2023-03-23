@@ -153,9 +153,9 @@
                         <small class="fst-italic">Armateur</small>
                     </td>
                     <td style="margin-left: 10px !important;">
-                        {{ obj.business.name }}
+                        {{ obj.company.name }}
                         <br>
-                        {{ obj.business.address|title }}, {{ obj.business.city|title }}, {{ obj.business.country|title }}
+                        {{ obj.company.address|title }}, {{ obj.company.city|title }}, {{ obj.company.country|title }}
                         <br> TEL : +243990580000
                         <br> EMAIL: contact@lmc.cd
                     </td>
@@ -169,10 +169,10 @@
                         <small>Forwarder</small>
                     </td>
                     <td style="width: 70%;">
-                        <b>{{ obj.business.name }}</b>
+                        <b>{{ obj.company.name }}</b>
                         / {{ obj.importer_expoter|default:"-" }}
                         <br>
-                        {{ obj.business.address|title }}, {{ obj.business.city|title }}, {{ obj.business.country.name }}
+                        {{ obj.company.address|title }}, {{ obj.company.city|title }}, {{ obj.company.country.name }}
                         TEL : +243990580000
                         EMAIL: contact@lmc.cd
                     </td>
