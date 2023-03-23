@@ -18,8 +18,9 @@ class Document(View):
         obj = get_object_or_404(model, **request.GET.dict())
         if hasattr(model, "inline_model_form"):
             data = getattr(model, "inline_model_form", {})
-            qs = apps.get_model(app_label=data.get("app_label"), model_name=data.get("model_name")) \
-                .objects.filter(**{model._meta.model_name: obj.id})
-            if isinstance(model, apps.get_model("service", "product", "penalty")):
-                qs = qs.values('product_type__name', 'product_type__fees').annotate(count=Sum('quantity'))
+            _model = apps.get_model(app_label=data.get("app_label"), model_name=data.get("model_name"))
+            qs = _model.objects.filter(**{model._meta.model_name: obj.id})
+            if data.get("model_name") == "Product":
+                qs = qs.values('product_type__name', 'product_type__fees', 'penalty').annotate(count=Sum('quantity'))
+                print(qs)
         return render(request, f"document/{template}.html", locals())

@@ -11,8 +11,9 @@ from datetime import date
 
 @receiver(pre_save, sender=Product)
 def pre_product(sender, instance, raw, using, update_fields, **kwargs):
+    penalty = instance.penalty if instance.penalty else 0
     total = instance.product_type.fees * instance.quantity
-    total = total + (total * (instance.penalty / 100))
+    total = total + (total * (penalty / 100))
     instance.total = total
 
 

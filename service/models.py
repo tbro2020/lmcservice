@@ -1,6 +1,7 @@
 from django.shortcuts import reverse
 from django.utils.translation import gettext_lazy as _
 
+from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -170,17 +171,10 @@ class Operation(models.Model):
     def __str__(self):
         return f"OP_{self.transport}_{self.id}"
 
-    """
     def clean(self):
-        if self.status not in [Operation.VALIDATE, Operation.COMPLETED]: return
-        # if not self.has_final_manifest(): raise ValidationError("Please make sure the latest manifest is provided")
-        if not bool(self.manifest_bp_no): raise ValidationError("Please make sure you fill the Manifest BP N.")
-        # if self.product_count() == 0: raise ValidationError("The system could not validate an operation with no products")
-
         if self.status == Operation.COMPLETED:
             if self.payment_method == Operation.PROOF and not bool(self.proof_of_payment):
                 raise ValidationError("Please provide a valid proof of payment")
-    """
 
     form_fields = ("transport", "operation_type", "forwarder", "bp_file",
                    "importer_expoter", "load_point", "entry_point", "exit_point")
