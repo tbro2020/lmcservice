@@ -20,7 +20,6 @@ class Document(View):
             data = getattr(model, "inline_model_form", {})
             _model = apps.get_model(app_label=data.get("app_label"), model_name=data.get("model_name"))
             qs = _model.objects.filter(**{model._meta.model_name: obj.id})
-            if data.get("model_name") == "Product":
+            if template == "invoice":
                 qs = qs.values('product_type__name', 'product_type__fees', 'penalty').annotate(count=Sum('quantity'))
-                print(qs)
         return render(request, f"document/{template}.html", locals())
