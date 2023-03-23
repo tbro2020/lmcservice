@@ -103,6 +103,7 @@ class Operation(models.Model):
     PROOF = "PROOF OF PAYMENT"
 
     PAYMENT_METHOD = (
+        (None, None),
         (WALLET, _('Provision')),
         (PROOF, _('Proof of Payment')),
     )
@@ -326,6 +327,14 @@ class Product(models.Model):
     class Meta:
         verbose_name = _("Product/Cargo")
         verbose_name_plural = _("Product/Cargos")
+
+    def cost(self):
+        total = self.product_type.fees * self.quantity
+        total = total + (total * (self.penalty / 100))
+        if not self.total:
+            self.total = total
+            self.save()
+        return self
 
 
 class CheckPoint(models.Model):
