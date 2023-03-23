@@ -38,7 +38,7 @@
                 <div>
                     <form method="get">
                         <div class="input-group mb-3">
-                          <input type="search" name="q" class="form-control" placeholder="{% trans 'Search' %}" aria-label="Search" aria-describedby="basic-addon2">
+                          <input type="search" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="{% trans 'Search' %}" aria-label="Search" aria-describedby="basic-addon2">
                           <div class="input-group-append">
                             <button class="btn btn-outline-secondary btn-sm" type="submit">{% trans 'Search' %}</button>
                           </div>
