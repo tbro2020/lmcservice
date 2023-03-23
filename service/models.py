@@ -313,12 +313,9 @@ class Product(models.Model):
 
     extra = {
         "fields": ({
-                       "condition": "request.user.is_superuser",
-                       "name": "penalty"
-                   }, {
-                       "condition": "request.user.is_superuser",
-                       "name": "is_activated"
-                   })
+           "condition": "request.user.is_superuser",
+           "name": "penalty"
+       },)
     }
 
     list_display_fields = ("id", "operation", "product_type", "quantity", "destination", "is_activated")

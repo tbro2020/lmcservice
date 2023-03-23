@@ -240,7 +240,7 @@ if not DEBUG:
     COMPRESS_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Security
-if not DEBUG:
+if DEBUG:
     CSRF_COOKIE_HTTPONLY = True
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True

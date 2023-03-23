@@ -42,9 +42,9 @@
             position: absolute;
             top: 2.5%;
             bottom: 2.5%;
-            width: 100%; 
-            height: 100%;  
-            opacity: .1; 
+            width: 100%;
+            height: 100%;
+            opacity: .1;
             z-index: -1;
         }
         {% endif %}
@@ -56,7 +56,7 @@
     {% endif %}
 
     {% comment %}
-    # if transport is BOAT only single generation 
+    # if transport is BOAT only single generation
     # if Truck generate according to the number of product all with the same ATM with different end specification
     {% endcomment %}
 
@@ -218,16 +218,16 @@
 
                             <dt class="col-sm-3">Bank</dt>
                             <dd class="col-sm-9">{{ obj.updated_by.office.billing_info.bank_name|default:"Bank Name" }}</dd>
-                            
+
                             <dt class="col-sm-3">Branch Name</dt>
                             <dd class="col-sm-9">{{ obj.updated_by.office.billing_info.branch_name|default:"Branch Name" }}</dd>
-                            
+
                             <dt class="col-sm-3 text-truncate">Branch No</dt>
                             <dd class="col-sm-9">{{ obj.updated_by.office.billing_info.branch_no|default:"Branch No" }}</dd>
 
                             <dt class="col-sm-3">Account Number</dt>
                             <dd class="col-sm-9">{{ obj.updated_by.office.billing_info.account_no|default:"Account No" }}</dd>
-                            
+
                             <dt class="col-sm-3">Swift Code</dt>
                             <dd class="col-sm-9">{{ obj.updated_by.office.billing_info.swift_code|default:"Swift Code" }}</dd>
                         </dl>

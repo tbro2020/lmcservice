@@ -52,7 +52,7 @@
 
                     {% for action in model.change_actions %}
                       {% if action.permission in perms and obj|attrmatch:action.limitation and action.method == "GET" and action.condition|eval:request %}
-                          <a href="{{ action.url }}?id={{ obj.id }}" class="btn btn-sm btn-outline-primary">{{ action.verbose_name }}</a>
+                          <a target="_blank" href="{{ action.url }}?id={{ obj.id }}" class="btn btn-sm btn-outline-primary">{{ action.verbose_name }}</a>
                       {% endif %}
                     {% endfor %}
 

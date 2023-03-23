@@ -3,6 +3,7 @@ from celery import shared_task
 from django.apps import apps
 from boto3 import session
 
+from core.filter import filterset_factory
 from lmcservice.mailer import Mailer
 from django.conf import settings
 
@@ -64,7 +65,6 @@ def report(app, model, query, email):
         return
 
     model = apps.get_model(app, model)
-    # filterset_factory
     qs = model.objects.filter(**query)
 
     filename, path = worksheet_filename_path()
