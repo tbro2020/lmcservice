@@ -231,7 +231,7 @@ class Operation(models.Model):
         "permission": "service.change_operation",
         "limitation": {"status": VALIDATE},
         "condition": "not request.user.is_staff",
-        "values": {"status": PAID, "payment_method": WALLET},
+        "values": {"status": COMPLETED, "payment_method": WALLET},
         "prerequisite": {
             "condition": "apps.get_model('wallet', 'transaction').objects.filter(company=qs.last().company, "
                          "status='PAID').balance() > qs.last().cost.amount",
