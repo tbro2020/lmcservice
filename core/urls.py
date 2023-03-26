@@ -14,6 +14,7 @@ from core.views.action import *
 from core.views.api.list import *
 from core.views.api.operation import *
 from core.views.api.checkpoint import *
+from core.views.create_company import *
 
 app_name = "core"
 
@@ -31,5 +32,7 @@ urlpatterns = [
 
     path("check-point-operation/<int:checkpoint>", CheckPointATM.as_view(), name="check-point-operation"),
     path("api-check-point-operation", OperationAPIView.as_view(), name="api-check-point-operation"),
-    path("api-list/<str:app>/<str:model>", ListAPI.as_view(), name="api-list")
+    path("api-list/<str:app>/<str:model>", ListAPI.as_view(), name="api-list"),
+
+    path("create-company", CreateCompany.as_view(), name="create-company")
 ]

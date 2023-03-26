@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load i18n %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h1 style="margin-bottom: 0%;">{% trans "Register your company" %}</h1>
+    <small class="text-muted">{% translate "Start use" %} <small class="text-primary">LMC service</small> {% translate "and save time/money" %}</small>
+    <form method="post">
+        {% crispy form %}
+        <button class="btn btn-success btn-sm col" type="button">{% trans "Submit" %}</button>
+        <a class="text-info" href="{% url 'login' %}" style="text-decoration: none;font-size: 0.75rem;"></a>
+    </form>
+{% endblock %}
