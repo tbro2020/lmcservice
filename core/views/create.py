@@ -13,6 +13,8 @@ from django.contrib.admin.models import LogEntry, ADDITION
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.admin.utils import construct_change_message
 
+from django.db import transaction
+
 
 class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
 
@@ -62,12 +64,12 @@ class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
         if isinstance(obj, apps.get_model("core", "user")): obj.groups.add(*list(request.user.groups.all()))
 
         if hasattr(model, "inline_model_form"):
-            inlines = inlineformset.save(commit=False)
-            for inline in inlines:
-                if not hasattr(inline, inlineformset.fk.name): continue
-                setattr(inline, inlineformset.fk.name, obj)
-                inline.save()
-            inlineformset.save_m2m()
+            with transaction.atomic():
+                inlines = inlineformset.save(commit=False)
+                for inline in inlines:
+                    if not hasattr(inline, inlineformset.fk.name): continue
+                    setattr(inline, inlineformset.fk.name, obj)
+                    inline.save()
 
         messages.success(request, f"{model._meta.verbose_name} created successfully")
         message = construct_change_message(form, None, True)
