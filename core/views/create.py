@@ -67,9 +67,9 @@ class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
                 if not hasattr(inline, inlineformset.fk.name): continue
                 setattr(inline, inlineformset.fk.name, obj)
                 inline.save()
+            inlineformset.save_m2m()
 
         messages.success(request, f"{model._meta.verbose_name} created successfully")
-
         message = construct_change_message(form, inlineformset, True)
         LogEntry.objects.log_action(user_id=request.user.id, content_type_id=ContentType.objects.get_for_model(obj).pk,
                                     object_id=obj.id, object_repr=f"Creation de {obj}",
