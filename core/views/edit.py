@@ -101,7 +101,7 @@ class Edit(LoginRequiredMixin, PermissionRequiredMixin, View):
         if hasattr(model, "inline_model_form"): inlineformset.save()
         messages.success(request, f"{model._meta.verbose_name} {getattr(obj, 'status', '')} updated successfully")
 
-        message = construct_change_message(form, inlineformset, False)
+        message = construct_change_message(form, None, False)
         LogEntry.objects.log_action(user_id=request.user.id, content_type_id=ContentType.objects.get_for_model(obj).pk,
                                     object_id=obj.id, object_repr=f"Modification de {obj}",
                                     action_flag=CHANGE, change_message=str(message))
