@@ -16,7 +16,7 @@ class OperationAPIView(APIView):
         if "location" not in request.data: raise Http404()
 
         data.update({"operation_id": data.get("operation", None), "product_id": data.get("product", None)})
-        [data.pop(key) for key in ["operation", "product"] if key in data.keys()]
+        [data.pop(key) for key in ["operation", "product", "device_info"] if key in data.keys()]
         checkpoint, created = CheckPoint.objects.get_or_create(**data)
 
         if not created:
