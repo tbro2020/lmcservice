@@ -15,7 +15,7 @@ class CreateCompany(View):
         form = modelform_factory(model, **data)
         return render(request, f"registration/create_company.html", locals())
 
-    def post(self, request, app, model):
+    def post(self, request):
         model = apps.get_model("service", "company")
         data = modelform_factory_data(model)
         form = modelform_factory(model, **data)(request.POST, request.FILES)
