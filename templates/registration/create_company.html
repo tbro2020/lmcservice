@@ -7,9 +7,11 @@
 {% block content %}
     <h1 style="margin-bottom: 0%;">{% trans "Register your company" %}</h1>
     <small class="text-muted">{% translate "Start use" %} <small class="text-primary">LMC service</small> {% translate "and save time/money" %}</small>
+    {{ form.non_form_errors }}
     <form method="post" id="main-form">
+        {% csrf_token %}
         {% crispy form %}
         <button form="main-form" class="btn btn-success btn-sm col" type="button">{% trans "Submit" %}</button>
-        <a class="text-info" href="{% url 'login' %}" style="text-decoration: none;font-size: 0.75rem;"></a>
+        <a class="text-info" href="{% url 'login' %}" style="text-decoration: none;font-size: 0.75rem;">{% trans "Login" %}</a>
     </form>
 {% endblock %}
