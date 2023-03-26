@@ -1,3 +1,4 @@
+{% load core %}
 {% load i18n %}
 {% load static %}
 
@@ -311,6 +312,8 @@
                             </dl>
                             <br>
                             <small class="fs-6">ATM Updated, on {{ obj.updated.date }}</small>
+                            <small class="fs-6"><b>Expire on <i>{{ obj.update.date|addDays:30 }}</i>></b>></small>>
+
                             <small class="fs-6">Printed, on {% now "SHORT_DATETIME_FORMAT" %}</small>
                         </div>
                     </td>

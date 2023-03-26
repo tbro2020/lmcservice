@@ -24,11 +24,12 @@ def post_product(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Company)
 def post_company(sender, instance, created, **kwargs):
+    if instance: return
     model = instance._meta
     if created:
         tasks.mailer.delay(model.app_label, model.model_name, instance.id,
-                          "email/company/welcome.html", _("Thank you for your registration"),
-                          instance.email)
+                           "email/company/welcome.html", _("Thank you for your registration"),
+                           instance.email)
         return
 
     qs = User.objects.filter(company=instance)

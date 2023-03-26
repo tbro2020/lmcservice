@@ -149,3 +149,8 @@ class ProductType(models.Model):
     class Meta:
         verbose_name = _("Product Type")
         verbose_name_plural = _("Product Type(s)")
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, default=None)
+    created = models.DateTimeField(auto_created=True)

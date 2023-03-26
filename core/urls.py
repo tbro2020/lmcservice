@@ -1,6 +1,3 @@
-from django.contrib.auth.decorators import login_required
-from django.views.decorators.cache import cache_page
-
 from django.urls import path
 
 from core.views.view import *
@@ -14,15 +11,13 @@ from core.views.document import *
 from core.views.export import *
 from core.views.action import *
 
-from core.views import api
+from core.views.api.list import *
+from core.views.api.operation import *
+from core.views.api.checkpoint import *
 
 app_name = "core"
 
 urlpatterns = [
-    # apply cache with memcached
-    # path("", cache_page(60*60)(login_required(Home.as_view())), name="home"),
-    # path("create/<str:app>/<str:model>", cache_page(60*60)(Create.as_view()), name="create"),
-
     path("", Home.as_view(), name="home"),
     path("list/<str:app>/<str:model>", List.as_view(), name="list"),
     path("create/<str:app>/<str:model>", Create.as_view(), name="create"),
@@ -34,6 +29,7 @@ urlpatterns = [
     path("action/<str:app>/<str:model>/<str:verbose>", Action.as_view(), name="action"),
     path("export/<str:app>/<str:model>", Export.as_view(), name="export"),
 
-    path("api-check-point-operation", api.OperationAPIView.as_view(), name="api-check-point-operation"),
-    path("check-point-operation/<int:checkpoint>", api.CheckPointATM.as_view(), name="check-point-operation")
+    path("check-point-operation/<int:checkpoint>", CheckPointATM.as_view(), name="check-point-operation"),
+    path("api-check-point-operation", OperationAPIView.as_view(), name="api-check-point-operation"),
+    path("api-list/<str:app>/<str:model>", ListAPI.as_view(), name="api-list")
 ]

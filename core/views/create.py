@@ -10,6 +10,7 @@ from core.utils import modelform_factory_data
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
+
 class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def get_permission_required(self):

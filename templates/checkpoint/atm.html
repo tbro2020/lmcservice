@@ -1,8 +1,34 @@
-{% extends 'base.html' %}
 {% load i18n %}
+{% load static %}
+{% get_current_language as LANGUAGE_CODE %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon"href="{% static 'favicon.ico' %}">
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}LMC{% endblock title %}</title>
+    <meta name="description" content="{% block description %}LMC Services{% endblock description %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 
-{% block content %}
-<div class="container">
+    <style>
+        body{
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+        .btn, .form-control, .card{
+            border-radius: 2.5px;
+        }
+        label{
+            font-size: 0.75rem;
+        }
+        .form-group{
+            margin-top: 0px;
+        }
+    </style>
+</head>
+<body class="bg-dark text-light">
+    <div class="container">
     <h1>Operation #{{ checkpoint.operation.id }}</h1>
     <small>Verified by <b class="text-warning">{{ checkpoint.user.get_full_name|default:checkpoint.user.email }}</b> at <i>{{ checkpoint.created }}</i></small>
     <hr>
@@ -87,4 +113,20 @@
         </div>
     </div>
 </div>
-{% endblock content %}
+</body>
+<footer>
+    <div class="col text-center" style="margin-top: 1rem;margin-bottom: 1rem;">
+        {% get_available_languages as LANGUAGES %}
+        {% for language in LANGUAGES %}
+            <small><a href="#" data-value="{{ language.0 }}" class="lang-btn text-muted" style="text-decoration: none;">{{ language.1 }}</a></small> {% if not forloop.last %}|{% endif %}
+        {% endfor %}
+
+        <form id="change_lang_form" action="#" method="post" style="display: none;">
+            {% csrf_token %}
+            <input type="hidden" name="language" id="id_language">
+            <input type="submit" value="Go">
+        </form>
+    </div>
+</footer>
+<noscript>Your browser does not support JavaScript!</noscript>
+</html>

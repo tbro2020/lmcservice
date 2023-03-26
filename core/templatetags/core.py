@@ -2,6 +2,7 @@ from django.apps import apps
 from django import template
 
 from service.models import Operation
+from datetime import timedelta
 
 register = template.Library()
 
@@ -68,3 +69,8 @@ def evaluation(expression, request):
 @register.filter(name="stringbuilder")
 def stringbuilder(a, b):
     return f"{str(a)}{str(b)}"
+
+
+@register.filter(name="addDays")
+def addDays(date, days):
+    return date + timedelta(days=days)

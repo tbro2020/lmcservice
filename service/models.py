@@ -268,8 +268,6 @@ class Operation(models.Model):
         verbose_name_plural = _("Operations")
 
 
-# -----------------------------------------------------------
-
 class Product(models.Model):
     name = models.CharField(_("Product's nature"), max_length=50)
     operation = models.ForeignKey(Operation, on_delete=models.CASCADE)
@@ -337,16 +335,16 @@ class CheckPoint(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, default=None)
 
     location = models.JSONField(null=True, default=None)
-    device_info = models.JSONField(null=True, default=None)
-
     created = models.DateTimeField(_("Created"), auto_now_add=True)
 
     def url(self, request):
-        return "https://{host}{path}".format(host=request.get_host(), path=reverse("service:check-point-operation",
+        return "https://{host}{path}".format(host=request.get_host(), path=reverse("core:check-point-operation",
                                                                                    kwargs={"checkpoint": self.id}))
+
+    list_display_fields = ("id", "operation__company__name", "operation", "product", "product__ref", "product__truck",
+                           "created")
+    filter_fields = ("operation__entry_point", "product__product_type", "product__is_transshipped", "created")
 
     class Meta:
         verbose_name = _("Check point")
         verbose_name_plural = _("Check points")
-
-    list_display_fields = ("id", "operation", "product", "created")
