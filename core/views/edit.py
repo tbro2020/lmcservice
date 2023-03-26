@@ -98,9 +98,7 @@ class Edit(LoginRequiredMixin, PermissionRequiredMixin, View):
         if isinstance(obj, apps.get_model("service", "operation")): obj.updated_by = request.user
 
         obj.save()
-        if hasattr(model, "inline_model_form"):
-            inlineformset.save()
-            inlineformset.save_m2m()
+        if hasattr(model, "inline_model_form"): inlineformset.save()
         messages.success(request, f"{model._meta.verbose_name} {getattr(obj, 'status', '')} updated successfully")
 
         message = construct_change_message(form, inlineformset, False)
