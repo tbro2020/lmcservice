@@ -31,6 +31,7 @@ django-money==3.0.0
 django-phonenumber-field==7.0.2
 django-phonenumbers==1.0.1
 django-redis-cache==3.0.1
+django-simple-history==3.3.0
 django-storages==1.13.2
 django_debug_toolbar==3.8.1
 djangorestframework==3.14.0

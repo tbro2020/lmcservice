@@ -6,7 +6,6 @@ from djmoney.models.fields import MoneyField
 from core.utils import default_limitation
 from core.manager import UserManager
 
-
 class User(AbstractUser):
     username = None
     REQUIRED_FIELDS = []
