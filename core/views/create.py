@@ -2,13 +2,16 @@ from django.contrib import messages
 from django.apps import apps
 
 from django.forms import modelform_factory, inlineformset_factory
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render, reverse, redirect
 from django.views import View
 
 from core.utils import modelform_factory_data
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.admin.models import LogEntry, ADDITION
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.admin.utils import construct_change_message
 
 
 class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -66,5 +69,9 @@ class Create(LoginRequiredMixin, PermissionRequiredMixin, View):
                 inline.save()
 
         messages.success(request, f"{model._meta.verbose_name} created successfully")
-        return redirect(
-            reverse('core:edit', kwargs={"app": app, "model": model._meta.model_name, "pk": form.instance.id}))
+
+        message = construct_change_message(form, inlineformset, True)
+        LogEntry.objects.log_action(user_id=request.user.id, content_type_id=ContentType.objects.get_for_model(obj).pk,
+                                    object_id=obj.id, object_repr=str(obj),
+                                    action_flag=ADDITION, message=str(message))
+        return redirect(reverse('core:edit', kwargs={"app": app, "model": model._meta.model_name, "pk": form.instance.id}))

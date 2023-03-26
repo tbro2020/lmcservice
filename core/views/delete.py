@@ -1,10 +1,13 @@
 from django.apps import apps
 
-from django.shortcuts import render, reverse, redirect, get_object_or_404, HttpResponse
+from django.shortcuts import render, reverse, redirect, get_object_or_404
 from django.views import View
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
+
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.admin.models import LogEntry, DELETION
 
 
 class Delete(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -24,4 +27,7 @@ class Delete(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         obj = get_object_or_404(model, pk=pk)
         obj.delete()
+        LogEntry.objects.log_action(user_id=request.user.id, content_type_id=ContentType.objects.get_for_model(obj).pk,
+                                    object_id=obj.id, object_repr=str(obj),
+                                    action_flag=DELETION, message="{}")
         return redirect(reverse('core:list', kwargs={"app": app, "model": model._meta.model_name}))
