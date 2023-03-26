@@ -103,6 +103,6 @@ class Edit(LoginRequiredMixin, PermissionRequiredMixin, View):
 
         message = construct_change_message(form, inlineformset, False)
         LogEntry.objects.log_action(user_id=request.user.id, content_type_id=ContentType.objects.get_for_model(obj).pk,
-                                    object_id=obj.id, object_repr=str(obj),
+                                    object_id=obj.id, object_repr=f"Modification de {obj}",
                                     action_flag=CHANGE, change_message=str(message))
         return redirect(reverse('core:edit', kwargs={"app": app, "model": model._meta.model_name, "pk": pk}))

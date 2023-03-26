@@ -28,6 +28,6 @@ class Delete(LoginRequiredMixin, PermissionRequiredMixin, View):
         obj = get_object_or_404(model, pk=pk)
         obj.delete()
         LogEntry.objects.log_action(user_id=request.user.id, content_type_id=ContentType.objects.get_for_model(obj).pk,
-                                    object_id=obj.id, object_repr=str(obj),
+                                    object_id=obj.id, object_repr=f"Suppression de {obj}",
                                     action_flag=DELETION, change_message="{}")
         return redirect(reverse('core:list', kwargs={"app": app, "model": model._meta.model_name}))
