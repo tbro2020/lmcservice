@@ -47,7 +47,7 @@ def mailer(app, model, pk, template, subject, to):
     model = apps.get_model(app, model)
     context = model.objects \
         .values(*[field.name for field in model._meta.get_fields()]).filter(id=pk).first()
-    Mailer(template, context, subject, to).send()
+    Mailer(template, context, subject, [to]).send()
 
 
 def worksheet_filename_path():
