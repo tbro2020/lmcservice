@@ -25,4 +25,5 @@ class CreateCompany(View):
 
         form.save()
         messages.success(request, f"{model._meta.verbose_name} created successfully")
+        messages.success(request, "We are reviewing your registration, and will mail your with a confirmation")
         return redirect(reverse('login'))
