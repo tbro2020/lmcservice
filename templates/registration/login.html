@@ -28,6 +28,17 @@
                     <div class="text-center">
                         <img src="{% static "image/logo.png" %}" class="img-fluid" style="width: 15rem;height: 15rem;" alt="lmc-logo">
                     </div>
+
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                <ul class="messages mb-0 text-uppercase">
+                                    <li>{{ message|safe }}</li>
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
                     <div class="text-center" style="margin-top: 2rem;">
                         <h1>
                         <span
