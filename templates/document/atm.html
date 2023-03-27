@@ -288,7 +288,9 @@
                     <td style="width: 20%">
                         {% if obj.status == "COMPLETED" %}
                         <div class="col text-start" style="margin-top: 2%;">
-                            <img width="128" src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={'next':'atm','operation':{{ obj.id }},'product':{{product.id}}}" alt="lmc-qr-code-{{ obj.id }}">
+                            {% with obj.id|atmQrcode:product.id as qr %}
+                                <img width="128" src="{{ qr|safe }}" alt="lmc-qr-code-{{ obj.id }}">
+                            {% endwith %}
                         </div>
                         {% endif %}
                     </td>
