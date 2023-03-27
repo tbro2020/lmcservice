@@ -16,7 +16,6 @@ class ListAPI(APIView):
 
     def get(self, request, app, model):
         if not request.user.has_perm(self.get_permission_required()): Http404()
-        print(request.user)
         model = apps.get_model(app, model)
         query = request.GET.dict()
         if "format" in query: del query["format"]

@@ -39,7 +39,7 @@ def display_status(status):
         Operation.VALIDATE: "primary",
         Operation.COMPLETED: "success",
         Operation.PAID: "success",
-        Operation.REJECTED: 'rejected'
+        Operation.REJECTED: 'danger'
     }.get(status)
 
 
