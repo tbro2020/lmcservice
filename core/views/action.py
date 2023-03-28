@@ -4,7 +4,9 @@ from django.views import View
 from django.apps import apps
 
 from django.db.models.signals import post_save
+from django.contrib.admin.models import LogEntry, CHANGE
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import PermissionRequiredMixin
 
 
@@ -33,8 +35,14 @@ class Action(LoginRequiredMixin, PermissionRequiredMixin, View):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
             action = eval(prerequisite.get("action", "False"))
             if action: messages.success(request, prerequisite.get("message", {}).get("success", "Action success"))
-            
+
         qs.update(**data)
         post_save.send(model, instance=qs.last(), created=False)
         messages.success(request, "Action updated successfully")
+
+        obj = qs.last()
+        LogEntry.objects.log_action(user_id=request.user.id, content_type_id=ContentType.objects.get_for_model(obj).pk,
+                                    object_id=obj.id, object_repr=f"Modification de {obj}",
+                                    action_flag=CHANGE, change_message=str(data))
+
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

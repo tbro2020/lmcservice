@@ -210,6 +210,22 @@ class Operation(models.Model):
           "limitation": {"status": VALIDATE},
           "condition": "1"
       }, {
+          "verbose_name": "Debit Note",
+          "method": "GET",
+          "url": reverse("core:document",
+                         kwargs={"app": "service", "model": "operation", "template": "invoice"}),
+          "permission": "service.view_operation",
+          "limitation": {"status": COMPLETED},
+          "condition": "1"
+      }, {
+          "verbose_name": "Debit Note",
+          "method": "GET",
+          "url": reverse("core:document",
+                         kwargs={"app": "service", "model": "operation", "template": "invoice"}),
+          "permission": "service.view_operation",
+          "limitation": {"status": PAID},
+          "condition": "1"
+      }, {
           "verbose_name": "ATM",
           "method": "GET",
           "url": reverse("core:document",

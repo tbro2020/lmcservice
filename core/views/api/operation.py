@@ -13,7 +13,7 @@ class OperationAPIView(APIView):
         data = dict(request.data)
         if "next" in data: del data["next"]
         CheckPoint = apps.get_model("service", "checkpoint")
-        if "location" not in request.data: raise Http404()
+        if "location" not in request.data or not request.user.is_staff: raise Http404()
 
         data.update({"operation_id": data.get("operation", None), "product_id": data.get("product", None)})
         [data.pop(key) for key in ["operation", "product", "device_info"] if key in data.keys()]
