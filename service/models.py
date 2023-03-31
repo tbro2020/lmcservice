@@ -249,7 +249,7 @@ class Operation(models.Model):
         "condition": "not request.user.is_staff",
         "values": {"status": COMPLETED, "payment_method": WALLET},
         "prerequisite": {
-            "condition": "obj.company.balance.amount > obj.cost.amount",
+            "condition": "obj.company.balance.amount > obj.cost.amount and obj.company == request.user.company",
             "action": "apps.get_model('wallet', 'transaction').debit(obj)",
             "message": {
                 "error": "We fail to debit your account",
