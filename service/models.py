@@ -246,7 +246,7 @@ class Operation(models.Model):
         "url": reverse("core:action", kwargs={"app": "service", "model": "operation", "verbose": "Pay"}),
         "permission": "service.change_operation",
         "limitation": {"status": VALIDATE},
-        "condition": "not request.user.is_staff",
+        "condition": "not request.user.is_staff and request.user.company == qs.last().company",
         "values": {"status": COMPLETED, "payment_method": WALLET},
         "prerequisite": {
             "condition": "company=qs.last().company.balance > qs.last().cost",
