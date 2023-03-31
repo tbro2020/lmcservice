@@ -249,8 +249,8 @@ class Operation(models.Model):
         "condition": "not request.user.is_staff",
         "values": {"status": COMPLETED, "payment_method": WALLET},
         "prerequisite": {
-            "condition": "qs.last().company.balance.amount > qs.last().cost.amount",
-            "action": "apps.get_model('wallet', 'transaction').debit(qs.last())",
+            "condition": "obj.company.balance.amount > obj.cost.amount",
+            "action": "apps.get_model('wallet', 'transaction').debit(obj)",
             "message": {
                 "error": "We fail to debit your account",
                 "success": "Your account has been debited with success"
