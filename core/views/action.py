@@ -31,8 +31,7 @@ class Action(LoginRequiredMixin, PermissionRequiredMixin, View):
         if actions.get("prerequisite", False):
             prerequisite = actions.get("prerequisite")
             obj = qs.last()
-            print(eval(prerequisite.get("condition")))
-            if eval(prerequisite.get("condition", "False")):
+            if not eval(prerequisite.get("condition")):
                 messages.error(request, prerequisite.get("message", {}).get("error", "We fail this action"))
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
             action = eval(prerequisite.get("action", "False"))
