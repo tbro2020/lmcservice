@@ -19,12 +19,9 @@ class OperationAPIView(APIView):
         [data.pop(key) for key in ["operation", "product", "device_info"] if key in data.keys()]
         checkpoint, created = CheckPoint.objects.get_or_create(**data)
 
-        if not created:
-            return Response(
-                {"id": checkpoint.id, "url": checkpoint.url(request), "status": checkpoint.operation.status})
-
-        checkpoint.user = request.user
-        checkpoint.location = request.data["location"]
-        checkpoint.save()
+        if created:
+            checkpoint.user = request.user
+            checkpoint.location = request.data["location"]
+            checkpoint.save()
 
         return Response({"id": checkpoint.id, "url": checkpoint.url(request), "status": checkpoint.operation.status})
