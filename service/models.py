@@ -363,3 +363,4 @@ class CheckPoint(models.Model):
     class Meta:
         verbose_name = _("Check point")
         verbose_name_plural = _("Check points")
+        ordering = ('-created',)
