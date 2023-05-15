@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load core %}
+{% load humanize %}
 {% load crispy_forms_tags %}
 
 {% block head %}
@@ -36,6 +37,9 @@
         <div class="row">
             <div class="col{% if filter %}-md-10{% endif %}">
                 <div class="row">
+                    {% if total_cost %}
+                        <div class="col-2">Total Cost : <h4>{{ total_cost|intcomma }}</h4></div>
+                    {% endif %}
                     <div class="col">
                         <form method="get">
                             <div class="input-group mb-3">
@@ -46,9 +50,6 @@
                             </div>
                         </form>
                     </div>
-                    {% if total_cost %}
-                        <div class="col-4">Total Cost : <h4>{{ total_cost }}</h4></div>
-                    {% endif %}
                 </div>
 
                 <div class="table-responsive">
@@ -68,7 +69,9 @@
                                 <td>
                                     {% if field == "status" %}
                                         <span class="badge badge-{{ obj|getdict:field|displaystatus }}">{{ obj|getdict:field|default:"-" }}</span>
-                                        {% else %}
+                                    {% elif field == "cost" or field == "total" %}
+                                        {{ obj|getdict:field|default:0.0|intcomma }}
+                                    {% else %}
                                         {{ obj|getdict:field|default:"-" }}
                                     {% endif %}
                                 </td>

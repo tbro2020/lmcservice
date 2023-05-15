@@ -55,8 +55,8 @@ class List(LoginRequiredMixin, PermissionRequiredMixin, View):
             filter = filterset_factory(model, getattr(model, "filter_fields", []))(request.GET, queryset=qs)
             qs = filter.qs
 
-        if model._meta.model_name == 'operation' and (request.user.is_superuser or request.user.has_perm('core.view_operation')):
-            total_cost = qs.filter(cost__isnull=False).aggregate(total_cost=Sum('cost')).get('cost__sum', 0)
+        if model._meta.model_name.lower() == 'operation' and (request.user.is_superuser or request.user.has_perm('core.view_operation')):
+            total_cost = qs.filter(cost__isnull=False).aggregate(total_cost=Sum('cost')).get('total_cost', 0)
 
         qs = qs.order_by("-id")
         qs = Paginator(qs, 30).page(request.GET.get('page', 1))

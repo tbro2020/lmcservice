@@ -2,13 +2,15 @@ from django.shortcuts import render
 from django.db.models import Count
 from django.views import View
 from service import models
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class Home(LoginRequiredMixin, View):
     def get(self, request):
-        qs = models.Operation.objects.filter(created__year=datetime.today().year)
+        # filter last 3 months
+        last_3_months = datetime.today() - timedelta(days=90)
+        qs = models.Operation.objects.filter(created__gte=last_3_months)
 
         # case of staff
         if request.user.is_staff and request.user.office is not None:
@@ -36,4 +38,5 @@ class Home(LoginRequiredMixin, View):
             data["bar"]["data"][bar.get("status")].append(bar.get("status__count"))
 
         data["bar"]["labels"] = [datetime.strptime(str(label), "%m").strftime("%B") for label in data["bar"]["labels"]]
+        data["bar"]["labels"] = list(set(data["bar"]["labels"]))
         return render(request, "home.html", locals())
