@@ -1,7 +1,7 @@
 from functools import reduce
 import operator
 
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.apps import apps
 
 from django.shortcuts import render
@@ -54,6 +54,9 @@ class List(LoginRequiredMixin, PermissionRequiredMixin, View):
         if hasattr(model, "filter_fields"):
             filter = filterset_factory(model, getattr(model, "filter_fields", []))(request.GET, queryset=qs)
             qs = filter.qs
+
+        if model._meta.model_name == 'operation' and (request.user.is_superuser or request.user.has_perm('core.view_operation')):
+            total_cost = qs.filter(cost__isnull=False).aggregate(total_cost=Sum('cost')).get('cost__sum', 0)
 
         qs = qs.order_by("-id")
         qs = Paginator(qs, 30).page(request.GET.get('page', 1))

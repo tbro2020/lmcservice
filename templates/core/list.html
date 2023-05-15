@@ -35,15 +35,20 @@
 
         <div class="row">
             <div class="col{% if filter %}-md-10{% endif %}">
-                <div>
-                    <form method="get">
-                        <div class="input-group mb-3">
-                          <input type="search" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="{% trans 'Search' %}" aria-label="Search" aria-describedby="basic-addon2">
-                          <div class="input-group-append">
-                            <button class="btn btn-outline-secondary btn-sm" type="submit">{% trans 'Search' %}</button>
-                          </div>
-                        </div>
-                    </form>
+                <div class="row">
+                    <div class="col">
+                        <form method="get">
+                            <div class="input-group mb-3">
+                              <input type="search" name="q" value="{{ request.GET.q }}" class="form-control" placeholder="{% trans 'Search' %}" aria-label="Search" aria-describedby="basic-addon2">
+                              <div class="input-group-append">
+                                <button class="btn btn-outline-secondary btn-sm" type="submit">{% trans 'Search' %}</button>
+                              </div>
+                            </div>
+                        </form>
+                    </div>
+                    {% if total_cost %}
+                    <div class="col-4">Total Cost : <h4>{{ total_cost }}</h4></div>
+                    {% endif %}
                 </div>
 
                 <div class="table-responsive">

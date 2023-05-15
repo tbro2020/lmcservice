@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 class Home(LoginRequiredMixin, View):
     def get(self, request):
-        qs = models.Operation.objects.filter(created__year=datetime.today().year)
+        qs = models.Operation.objects.filter(created__month=datetime.today().month)
 
         # case of staff
         if request.user.is_staff and request.user.office is not None:
@@ -27,10 +27,10 @@ class Home(LoginRequiredMixin, View):
             data["pie"]["labels"].append(pie.get("status"))
             data["pie"]["data"].append(pie.get("status__count"))
 
-        bars = qs.values("status", "created__month").annotate(Count("status"))
+        bars = qs.values("status", "created__day").annotate(Count("status"))
 
         for bar in bars:
-            data["bar"]["labels"].append(bar.get("created__month"))
+            data["bar"]["labels"].append(bar.get("created__day"))
             if bar.get("status") not in data["bar"]["data"]:
                 data["bar"]["data"][bar.get("status")] = []
             data["bar"]["data"][bar.get("status")].append(bar.get("status__count"))
