@@ -176,7 +176,7 @@ class Operation(models.Model):
             if self.payment_method == Operation.PROOF and not bool(self.proof_of_payment):
                 raise ValidationError("Please provide a valid proof of payment")
 
-    form_fields = ("transport", "operation_type", "forwarder", "bp_file",
+    form_fields = ("transport", "operation_type", "forwarder", "manifest_bp_no", "bp_file",
                    "importer_expoter", "load_point", "entry_point", "exit_point")
 
     filter_fields = ("transport", "status", "load_point", "entry_point", "exit_point", "updated", "created")
@@ -270,7 +270,7 @@ class Operation(models.Model):
         "verbose_name": "Export",
         "permission": "service.view_operation",
         "url": reverse("core:export", kwargs={"app": "service", "model": "operation"})
-    },)
+    })
 
     def total(self):
         qs = Product.objects.values('total').filter(operation=self)
