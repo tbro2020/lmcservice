@@ -26,9 +26,7 @@
                     {% endwith %}
 
                   {% for action in model.list_actions %}
-                      {% if action.permission in perms %}
-                          <a href="{{ action.url }}?{{ request.GET.urlencode }}" class="btn btn-sm btn-outline-primary">{% trans action.verbose_name %}</a>
-                      {% endif %}
+                      <a href="{{ action.url }}?{{ request.GET.urlencode }}" class="btn btn-sm btn-outline-primary">{% trans action.verbose_name %}</a>
                   {% endfor %}
               </div>
             </div>
