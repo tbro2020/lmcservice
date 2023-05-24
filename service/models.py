@@ -270,7 +270,7 @@ class Operation(models.Model):
         "verbose_name": "Export",
         "permission": "service.view_operation",
         "url": reverse("core:export", kwargs={"app": "service", "model": "operation"})
-    })
+    }, )
 
     def total(self):
         qs = Product.objects.values('total').filter(operation=self)
